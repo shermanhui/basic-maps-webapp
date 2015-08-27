@@ -35,7 +35,7 @@ function initMap() {
 function viewModel(){
 	var self = this;
 	this.locationsList = ko.observableArray();
-	this.searchList = ko.observableArray(self.locationsList.slice(0));
+	this.searchList = ko.observableArray();
 	this.filter = ko.observable('');
 
 	locationData.forEach(function(place){
@@ -69,7 +69,7 @@ function viewModel(){
 				return place.name().toLowerCase().indexOf(filter) !== -1;
 			});
 		}
-	}, viewModel);
+	});
 
 }
 initMap();

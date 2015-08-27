@@ -12,9 +12,9 @@
 </head>
 <body>
 	<div id="wrapper">
-		<input id="search-bar" placeholder="Search Here" type="search" data-bind="value: filter(), valueUpdate: 'keyup'" autocomplete="off">
+		<input id="search-bar" placeholder="Search Here" type="search" data-bind="value: filter, valueUpdate: 'keyup'" autocomplete="off">
 		<div id='list'>
-			<ul data-bind='foreach: locationsList'>
+			<ul data-bind='foreach: searchFilter'>
 				<li data-bind='text: name'></li>
 			</ul>
 		</div>
