@@ -1,4 +1,6 @@
-// TO DO FILTER MAP MARKERS
+// TO DO:
+// Filter map markers on search or link listview search to marker search
+// Link API data to original hard coded locations i.e address and contact for now
 //
 var map, marker;
 var infowindow = new google.maps.InfoWindow();
@@ -19,6 +21,7 @@ var locationData = [
 ];
 //var markers = [];
 
+//make a Location, data to be used for markers and list view
 var Location = function(data){
 	var self = this;
 	this.name = ko.observable(data.name);
@@ -31,6 +34,7 @@ var Location = function(data){
 	this.contentString = contentInfo(data);
 };
 
+// function to make infoWindow content
 var contentInfo = function(data){
 	var contentString =
 		'<div id="content">'+
@@ -45,6 +49,7 @@ var contentInfo = function(data){
 	return contentString;
 }
 
+// function to initialize map
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 49.2844, lng: -123.1089},
@@ -65,12 +70,15 @@ function viewModel(){
 
 	this.locationsList = ko.observableArray();
 	this.markers = ko.observableArray();
+	// the filter for search bar
 	this.filter = ko.observable('');
 
+	// uses hardcoded location data to make an observable array of Locations
 	locationData.forEach(function(place){
 		self.locationsList.push(new Location(place));
 	});
 
+	// for each Location plant a marker at the given lat,lng and on click show the info window
 	this.locationsList().forEach(function(place){
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(place.lat(), place.lng()),
@@ -89,6 +97,7 @@ function viewModel(){
 		})(marker, place));
 	});
 
+	// search functionality for list view
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
 		if (!filter){
@@ -100,6 +109,7 @@ function viewModel(){
 		}
 	});
 
+	// ajax call for FourSquare API data, currently just logs the whole thing
 	$.ajax(fsURL,{
 		dataType: 'json',
 		type: 'GET'
@@ -109,8 +119,8 @@ function viewModel(){
 	});
 
 }
+// initialize the map
 initMap();
 
+// bind KO
 ko.applyBindings(new viewModel());
-
-
