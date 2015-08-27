@@ -1,3 +1,5 @@
+// TO DO FILTER MAP MARKERS
+//
 var map, marker;
 var infowindow = new google.maps.InfoWindow();
 var locationData = [
@@ -15,15 +17,33 @@ var locationData = [
 		lng: -123.104271
 	}
 ];
-var markers = [];
+//var markers = [];
 
 var Location = function(data){
 	var self = this;
 	this.name = ko.observable(data.name);
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
+	this.address = ko.observable();
+	this.contact = ko.observable();
 	this.marker = ko.observable();
+
+	this.contentString = contentInfo(data);
 };
+
+var contentInfo = function(data){
+	var contentString =
+		'<div id="content">'+
+		'<div id="siteNotice">'+
+		'</div>'+
+		'<h1 id="firstHeading" class="firstHeading">'+ data.name +'</h1>'+
+		'<div id="bodyContent">'+
+		'<p><b>Address and Contact</b></p>'+
+		'<p>'+ data.address + ' '+ data.contact + '</p>' +
+		'</div>'+
+		'</div>';
+	return contentString;
+}
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -34,8 +54,17 @@ function initMap() {
 
 function viewModel(){
 	var self = this;
+	var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
+	var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
+	var fsURL = 'https://api.foursquare.com/v2/venues/search'+
+						'?near=Vancouver,BC'+
+						'&categoryId=4bf58dd8d48988d116941735'+
+						'&client_id='+CLIENT_ID+
+						'&client_secret='+CLIENT_SECRET+
+						'&v=20150825';
+
 	this.locationsList = ko.observableArray();
-	this.searchList = ko.observableArray();
+	this.markers = ko.observableArray();
 	this.filter = ko.observable('');
 
 	locationData.forEach(function(place){
@@ -50,11 +79,11 @@ function viewModel(){
 		});
 
 		place.marker = marker;
-		markers.push(marker);
+		self.markers.push(place.marker);
 
 		google.maps.event.addListener(marker, 'click', (function(marker, place) {
 			return function() {
-				infowindow.setContent(place.name());
+				infowindow.setContent(place.contentString);
 				infowindow.open(map, marker);
 			};
 		})(marker, place));
@@ -69,6 +98,14 @@ function viewModel(){
 				return place.name().toLowerCase().indexOf(filter) !== -1;
 			});
 		}
+	});
+
+	$.ajax(fsURL,{
+		dataType: 'json',
+		type: 'GET'
+	}).done(function(data){
+		var response = data.response.venues;
+		console.log(response);
 	});
 
 }
