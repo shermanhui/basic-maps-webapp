@@ -15,6 +15,7 @@ var locations = [
 		lng: -123.104271
 	}
 ];
+var markers = [];
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -33,23 +34,37 @@ function initMap() {
 				infowindow.open(map, marker);
 			}
 		})(marker, i));
+		markers.push(marker);
 	}
 }
 
 function viewModel(){
 	var self = this;
-	this.locationsList = ko.observableArray(locations);
+	this.locationsList = ko.observableArray(locations.slice(0));
 	this.filter = ko.observable('');
 
-	this.filteredItems = ko.computed(function(){
-		var filter = self.filter().toLowerCase();
-		console.log(filter);
-		return ko.utils.arrayFilter(self.locationsList(), function(locations){
-			return locations.name.toLowerCase().indexOf(filter) >= 0;
-		})
-	}, viewModel);
-
-
+	this.search = function(value) {
+		for (var i in markers){
+			markers[i].setMap(null);
+		}
+		self.locationsList.removeAll();
+		for(i in locations) {
+			if (locations[i].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+				self.locationsList.push(locations[i]);
+				markers[i].setMap(map);
+			} else {
+				// space for failed search message
+			}
+		}
+	};
+	// this.filteredItems = ko.computed(function(){
+	// 	var filter = self.filter().toLowerCase();
+	// 	console.log(filter);
+	// 	return ko.utils.arrayFilter(self.locationsList(), function(locations){
+	// 		return locations.name.toLowerCase().indexOf(filter) >= 0;
+	// 	})
+	// }, viewModel);
+	this.filter.subscribe(this.search);
 }
 initMap();
 
