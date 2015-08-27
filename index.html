@@ -1,0 +1,28 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Maps</title>
+	<style type="text/css">
+		html, body { height: 100%; margin: 0; padding: 0; }
+		#wrapper {position:relative;}
+		#search-bar {position: relative;}
+		#map {position: relative; height: 100%; }
+		#list {position: absolute; z-index: 99; height: 200px; width: 100px; right: 100px; top: 50px;}
+    </style>
+</head>
+<body>
+	<div id="wrapper">
+		<input id="search-bar" placeholder="Search Here" type="search" data-bind="value: filter, valueUpdate: 'keyup'" autocomplete="off">
+		<div id='list'>
+			<ul data-bind='foreach: locationsList'>
+				<li data-bind='text: name'></li>
+			</ul>
+		</div>
+		<div id='map'></div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBq9yUNpZ3THqGfag7H5m2cADRqMtn8FqM"></script>
+	<script src='main.js'></script>
+</body>
+</html>
