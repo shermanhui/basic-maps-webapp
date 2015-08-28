@@ -28,7 +28,7 @@ var Location = function(data){
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
 	this.address = ko.observable('');//data.location.address;
-	this.contact = ko.observable('');//data.contact.formattedPhone;
+	this.rating = ko.observable('');//data.contact.formattedPhone;
 
 	this.contentString = contentInfo(data);
 		// '<div id="content">'+
@@ -50,8 +50,8 @@ var contentInfo = function(data){
 		'</div>'+
 		'<h1 id="firstHeading" class="firstHeading">'+ data.name +'</h1>'+
 		'<div id="bodyContent">'+
-		'<p><b>Address and Contact</b></p>'+
-		'<p>'+ location.address + ' '+ location.contact + '</p>' +
+		'<p><b>Address and Rating</b></p>'+
+		'<p>'+ location.address + ', '+ location.contact + '</p>' +
 		'</div>'+
 		'</div>';
 	return contentString;
@@ -100,9 +100,11 @@ function viewModel(){
             }
 		})
 		function cb(data){
-			place.address = data.response.groups[0].items[0].venue.location.formattedAddress[0];
-			console.log(place.address);
-			self.locationsList.push(new Location(place));
+			var venue = data.response.groups[0].items[0].venue
+			place.address = venue.location.formattedAddress[0];
+			place.contact = venue.rating;
+			console.log(place.address, place.contact);
+			//self.locationsList.push(new Location(place));
 		}
 		self.locationsList.push(new Location(place));
 	});
