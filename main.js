@@ -24,13 +24,22 @@ var locationData = [
 //make a Location, data to be used for markers and list view
 var Location = function(data){
 	var self = this;
-	this.name = data.name;
-	this.lat = data.lat;
-	this.lng = data.lng;
-	this.address = "hi";//data.location.address;
-	this.contact = "hi";//data.contact.formattedPhone;
+	this.name = ko.observable(data.name);
+	this.lat = ko.observable(data.lat);
+	this.lng = ko.observable(data.lng);
+	this.address = ko.observable('');//data.location.address;
+	this.contact = ko.observable('');//data.contact.formattedPhone;
 
 	this.contentString = contentInfo(data);
+		// '<div id="content">'+
+		// '<div id="siteNotice">'+
+		// '</div>'+
+		// '<h1 id="firstHeading" class="firstHeading">'+ self.name +'</h1>'+
+		// '<div id="bodyContent">'+
+		// '<p><b>Address and Contact</b></p>'+
+		// '<p>'+ self.address + ' '+ self.contact + '</p>' +
+		// '</div>'+
+		// '</div>';
 };
 
 // function to make infoWindow content
@@ -60,12 +69,12 @@ function viewModel(){
 	var self = this;
 	var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 	var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
-	var fsURL = 'https://api.foursquare.com/v2/venues/search'+
-						'?near=Vancouver,BC'+
-						'&categoryId=4bf58dd8d48988d116941735'+
-						'&client_id='+CLIENT_ID+
-						'&client_secret='+CLIENT_SECRET+
-						'&v=20150825';
+	// var fsURL = 'https://api.foursquare.com/v2/venues/search'+
+	// 					'?near=Vancouver,BC'+
+	// 					'&categoryId=4bf58dd8d48988d116941735'+
+	// 					'&client_id='+CLIENT_ID+
+	// 					'&client_secret='+CLIENT_SECRET+
+	// 					'&v=20150825';
 
 	this.locationsList = ko.observableArray();
 	this.markers = ko.observableArray();
@@ -73,15 +82,37 @@ function viewModel(){
 
 	// uses hardcoded location data to make an observable array of Locations
 	locationData.forEach(function(place){
+		$.ajax({
+			url: 'https://api.foursquare.com/v2/venues/explore?',
+			dataType: 'json',
+			data: 'limit=1&ll=' + place.lat +
+				',' + place.lng +
+				'&query=' + place.name +
+				'&client_id=' + CLIENT_ID +
+				'&client_secret=' + CLIENT_SECRET +
+				'&v=20150806&m=foursquare',
+            async: true,
+            success: function(data){
+            	cb(data);
+            },
+            error: function(data){
+            	console.log('boo');
+            }
+		})
+		function cb(data){
+			place.address = data.response.groups[0].items[0].venue.location.formattedAddress[0];
+			console.log(place.address);
+			self.locationsList.push(new Location(place));
+		}
 		self.locationsList.push(new Location(place));
 	});
 
 	// for each Location plant a marker at the given lat,lng and on click show the info window
 	this.locationsList().forEach(function(place){
 		marker = new google.maps.Marker({
-			position: new google.maps.LatLng(place.lat, place.lng),
+			position: new google.maps.LatLng(place.lat(), place.lng()),
 			map: map,
-			title: place.name
+			title: place.name()
 		});
 
 		place.marker = marker;
@@ -91,14 +122,6 @@ function viewModel(){
 			return function() {
 				infowindow.setContent(place.contentString);
 				infowindow.open(map, marker);
-
-				// $.ajax(fsURL,{
-				// 	dataType: 'json',
-				// 	type: 'GET'
-				// }).done(function(data){
-				// 	var response = data.response.venues;
-				// 	console.log(response);
-				// });
 			};
 		})(marker, place));
 	});
@@ -125,27 +148,27 @@ function viewModel(){
 						self.markers()[i].setVisible(false);
 					}
 				}
-				return place.name.toLowerCase().indexOf(filter) !== -1; // returns matched list names
+				return place.name().toLowerCase().indexOf(filter) !== -1; // returns matched list names
 			});
 		}
 	});
 	console.log(self.markers()[1].title, self.markers()[1].visible);
-	console.log(self.locationsList()[0].name, self.locationsList()[1].name, self.locationsList()[2].name);
+	console.log(self.locationsList()[0].name(), self.locationsList()[1].name(), self.locationsList()[2].name());
 
 	// ajax call for FourSquare API data
-	$.ajax(fsURL,{
-		dataType: 'json',
-		type: 'GET'
-	}).done(function(data){
-		var response = data.response.venues;
-		console.log(response);
-		// response.forEach(function(response){
-		// 	console.log(response.name);
-		console.log(response[23].location.address);
-		console.log(response[23].location.address);
-		console.log(response[23].location.address);
-		// })
-	});
+	// $.ajax(fsURL,{
+	// 	dataType: 'json',
+	// 	type: 'GET'
+	// }).done(function(data){
+	// 	var response = data.response.venues;
+	// 	console.log(response);
+	// 	// response.forEach(function(response){
+	// 	// 	console.log(response.name);
+	// 	console.log(response[23].location.address);
+	// 	console.log(response[23].location.address);
+	// 	console.log(response[23].location.address);
+	// 	// })
+	// });
 
 }
 // initialize the map
