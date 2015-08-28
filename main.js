@@ -27,10 +27,8 @@ var Location = function(data){
 	this.name = data.name;
 	this.lat = data.lat;
 	this.lng = data.lng;
-	this.address = "";
-	this.contact = "";
-	this.marker = "";
-	this.isVisible = ko.observable(true);
+	this.address = "hi";//data.location.address;
+	this.contact = "hi";//data.contact.formattedPhone;
 
 	this.contentString = contentInfo(data);
 };
@@ -44,7 +42,7 @@ var contentInfo = function(data){
 		'<h1 id="firstHeading" class="firstHeading">'+ data.name +'</h1>'+
 		'<div id="bodyContent">'+
 		'<p><b>Address and Contact</b></p>'+
-		'<p>'+ data.address + ' '+ data.contact + '</p>' +
+		'<p>'+ location.address + ' '+ location.contact + '</p>' +
 		'</div>'+
 		'</div>';
 	return contentString;
@@ -93,45 +91,59 @@ function viewModel(){
 			return function() {
 				infowindow.setContent(place.contentString);
 				infowindow.open(map, marker);
+
+				// $.ajax(fsURL,{
+				// 	dataType: 'json',
+				// 	type: 'GET'
+				// }).done(function(data){
+				// 	var response = data.response.venues;
+				// 	console.log(response);
+				// });
 			};
 		})(marker, place));
 	});
 
 	console.log(self.markers());
-	this.show = function(){
 
+	this.setMarker = function(){
+		for (var i = 0; i < self.markers().length; i++){
+			self.markers()[i].setVisible(true);
+		};
 	}
-
-	// search functionality for list view
+	// filters out list and markers
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
-		if (!filter){
+		if (!filter){ // if false return the list as normal
+			self.setMarker();
 			return self.locationsList();
 		} else {
 			return ko.utils.arrayFilter(self.locationsList(), function(place){
-				for (var i = 0; i < self.markers().length; i++){
+				for (var i = 0; i < self.markers().length; i++){ // for every marker if the title of the marker matches the filter set marker to visible
 					if (self.markers()[i].title.toLowerCase().indexOf(filter) !== -1){
-						self.markers()[i].setVisible(true)
-					} else {
+						self.markers()[i].setVisible(true);
+					} else { // everything else, set it to false
 						self.markers()[i].setVisible(false);
 					}
 				}
-				return place.name.toLowerCase().indexOf(filter) !== -1;
+				return place.name.toLowerCase().indexOf(filter) !== -1; // returns matched list names
 			});
 		}
 	});
-	console.log(self.markers()[1].title);
+	console.log(self.markers()[1].title, self.markers()[1].visible);
 	console.log(self.locationsList()[0].name, self.locationsList()[1].name, self.locationsList()[2].name);
 
-	// ajax call for FourSquare API data, currently just logs the whole thing
+	// ajax call for FourSquare API data
 	$.ajax(fsURL,{
 		dataType: 'json',
 		type: 'GET'
 	}).done(function(data){
 		var response = data.response.venues;
+		console.log(response);
 		// response.forEach(function(response){
 		// 	console.log(response.name);
-		// 	console.log(response.location.address);
+		console.log(response[23].location.address);
+		console.log(response[23].location.address);
+		console.log(response[23].location.address);
 		// })
 	});
 
