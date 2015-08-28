@@ -111,6 +111,7 @@ function viewModel(){
 			console.log(place.address, place.rating);
 			console.log(place);
 			self.locationsList.push(new Location(place));
+			console.log(self.locationsList());
 		}
 		//self.locationsList.push(new Location(place));
 	});
