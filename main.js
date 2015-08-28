@@ -107,10 +107,12 @@ function viewModel(){
 		function cb(data){
 			var venue = data.response.groups[0].items[0].venue
 			place.address = venue.location.formattedAddress[0];
-			place.contact = venue.rating;
-			console.log(place.address, place.contact);
+			place.rating = venue.rating;
+			console.log(place.address, place.rating);
+			console.log(place);
+			self.locationsList.push(new Location(place));
 		}
-		self.locationsList.push(new Location(place));
+		//self.locationsList.push(new Location(place));
 	});
 
 	// for each Location plant a marker at the given lat,lng and on click show the info window
@@ -159,7 +161,7 @@ function viewModel(){
 		}
 	});
 	//console.log(self.markers()[1].title, self.markers()[1].visible);
-	//console.log(self.locationsList()[0].name(), self.locationsList()[1].name(), self.locationsList()[2].name());
+	console.log(self.locationsList()[0].name(), self.locationsList()[0].address(), self.locationsList()[0].rating());
 }
 // initialize the map
 initMap();
