@@ -1,25 +1,29 @@
 // TO DO:
-// Filter map markers on search or link listview search to marker search
 // Link API data to original hard coded locations i.e address and contact for now
-//
+// Be able to use user defined Location to populate list
 var map, marker;
 var infowindow = new google.maps.InfoWindow();
 var locationData = [
 	{
 		name: "The Lamplighter",
 		lat: 49.283846,
-		lng: -123.106120
+		lng: -123.106120,
+		address: '',
+		rating: ''
 	},{
 		name: "The Pint",
 		lat: 49.281399,
-		lng: -123.107622
+		lng: -123.107622,
+		address: '',
+		rating: ''
 	},{
 		name: "Six Acres",
 		lat: 49.283388,
-		lng: -123.104271
+		lng: -123.104271,
+		address: '',
+		rating: ''
 	}
 ];
-//var markers = [];
 
 //make a Location, data to be used for markers and list view
 var Location = function(data){
@@ -27,8 +31,8 @@ var Location = function(data){
 	this.name = ko.observable(data.name);
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
-	this.address = ko.observable('');//data.location.address;
-	this.rating = ko.observable('');//data.contact.formattedPhone;
+	this.address = ko.observable(data.address);
+	this.rating = ko.observable(data.rating);
 
 	this.contentString = contentInfo(data);
 		// '<div id="content">'+
@@ -51,7 +55,7 @@ var contentInfo = function(data){
 		'<h1 id="firstHeading" class="firstHeading">'+ data.name +'</h1>'+
 		'<div id="bodyContent">'+
 		'<p><b>Address and Rating</b></p>'+
-		'<p>'+ location.address + ', '+ location.contact + '</p>' +
+		'<p>'+ data.address + ', '+ data.rating + '</p>' +
 		'</div>'+
 		'</div>';
 	return contentString;
@@ -76,8 +80,8 @@ function viewModel(){
 	// 					'&client_secret='+CLIENT_SECRET+
 	// 					'&v=20150825';
 
-	this.locationsList = ko.observableArray();
-	this.markers = ko.observableArray();
+	this.locationsList = ko.observableArray(); // list to keep track of Locations
+	this.markers = ko.observableArray(); // list of markers
 	this.filter = ko.observable(''); 	// the filter for search bar
 
 	// uses hardcoded location data to make an observable array of Locations
@@ -94,6 +98,7 @@ function viewModel(){
             async: true,
             success: function(data){
             	cb(data);
+            	//self.locationsList.push(new Location(place));
             },
             error: function(data){
             	console.log('boo');
@@ -104,13 +109,12 @@ function viewModel(){
 			place.address = venue.location.formattedAddress[0];
 			place.contact = venue.rating;
 			console.log(place.address, place.contact);
-			//self.locationsList.push(new Location(place));
 		}
 		self.locationsList.push(new Location(place));
 	});
 
 	// for each Location plant a marker at the given lat,lng and on click show the info window
-	this.locationsList().forEach(function(place){
+	self.locationsList().forEach(function(place){
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(place.lat(), place.lng()),
 			map: map,
@@ -143,7 +147,7 @@ function viewModel(){
 			return self.locationsList();
 		} else {
 			return ko.utils.arrayFilter(self.locationsList(), function(place){
-				for (var i = 0; i < self.markers().length; i++){ // for every marker if the title of the marker matches the filter set marker to visible
+				for (var i = 0; i < self.markers().length; i++){ // for every marker if the title of the marker matches the filter set markers to visible
 					if (self.markers()[i].title.toLowerCase().indexOf(filter) !== -1){
 						self.markers()[i].setVisible(true);
 					} else { // everything else, set it to false
@@ -154,24 +158,8 @@ function viewModel(){
 			});
 		}
 	});
-	console.log(self.markers()[1].title, self.markers()[1].visible);
-	console.log(self.locationsList()[0].name(), self.locationsList()[1].name(), self.locationsList()[2].name());
-
-	// ajax call for FourSquare API data
-	// $.ajax(fsURL,{
-	// 	dataType: 'json',
-	// 	type: 'GET'
-	// }).done(function(data){
-	// 	var response = data.response.venues;
-	// 	console.log(response);
-	// 	// response.forEach(function(response){
-	// 	// 	console.log(response.name);
-	// 	console.log(response[23].location.address);
-	// 	console.log(response[23].location.address);
-	// 	console.log(response[23].location.address);
-	// 	// })
-	// });
-
+	//console.log(self.markers()[1].title, self.markers()[1].visible);
+	//console.log(self.locationsList()[0].name(), self.locationsList()[1].name(), self.locationsList()[2].name());
 }
 // initialize the map
 initMap();
