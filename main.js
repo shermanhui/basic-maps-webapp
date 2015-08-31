@@ -3,7 +3,7 @@
 // Be able to use user defined Location to populate list
 var map, marker;
 var infowindow = new google.maps.InfoWindow();
-var locationData = [
+var locationData = [ // hardcoded locations for testing
 	{
 		name: "The Lamplighter",
 		lat: 49.283846,
@@ -34,7 +34,7 @@ var Location = function(data){
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
 
-	this.contentString =
+	this.contentString = // create content string for infoWindow
 		'<div id="content">'+
 		'<div id="siteNotice">'+
 		'</div>'+
@@ -61,7 +61,7 @@ var Location = function(data){
 // 	return contentString;
 // }
 
-// function to initialize map
+// function to initialize Google map
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 49.2844, lng: -123.1089},
@@ -89,7 +89,7 @@ function viewModel(){
 				'&client_id=' + CLIENT_ID +
 				'&client_secret=' + CLIENT_SECRET +
 				'&v=20150806&m=foursquare',
-            success: function(data){
+            success: function(data){ // I want to update the hardcoded locations with FS data about their address and rating
             	cb(data);
             	//self.locationsList.push(new Location(place));
             },
@@ -104,7 +104,8 @@ function viewModel(){
 			console.log(place.address, place.rating);
 			console.log(place);
 			self.locationsList.push(new Location(place));
-			//console.log(self.locationsList());
+			//console.log(self.locationsList()[0].address(), self.locationsList()[0].rating());
+			console.log(self.locationsList());
 
 			//return self.locationsList();
 		}
