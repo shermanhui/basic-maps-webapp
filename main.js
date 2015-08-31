@@ -34,32 +34,32 @@ var Location = function(data){
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
 
-	this.contentString = contentInfo(data);
-		// '<div id="content">'+
-		// '<div id="siteNotice">'+
-		// '</div>'+
-		// '<h1 id="firstHeading" class="firstHeading">'+ self.name +'</h1>'+
-		// '<div id="bodyContent">'+
-		// '<p><b>Address and Contact</b></p>'+
-		// '<p>'+ self.address + ' '+ self.contact + '</p>' +
-		// '</div>'+
-		// '</div>';
-};
-
-// function to make infoWindow content
-var contentInfo = function(data){
-	var contentString =
+	this.contentString =
 		'<div id="content">'+
 		'<div id="siteNotice">'+
 		'</div>'+
-		'<h1 id="firstHeading" class="firstHeading">'+ data.name +'</h1>'+
+		'<h1 id="firstHeading" class="firstHeading">'+ self.name() +'</h1>'+
 		'<div id="bodyContent">'+
-		'<p><b>Address and Rating</b></p>'+
-		'<p>'+ data.address + ', '+ data.rating + '</p>' +
+		'<p><b>Address and Contact</b></p>'+
+		'<p>'+ self.address() + ', '+ self.rating() + '</p>' +
 		'</div>'+
 		'</div>';
-	return contentString;
-}
+};
+
+// // function to make infoWindow content
+// var contentInfo = function(data){
+// 	var contentString =
+// 		'<div id="content">'+
+// 		'<div id="siteNotice">'+
+// 		'</div>'+
+// 		'<h1 id="firstHeading" class="firstHeading">'+ data.name +'</h1>'+
+// 		'<div id="bodyContent">'+
+// 		'<p><b>Address and Rating</b></p>'+
+// 		'<p>'+ data.address + ', '+ data.rating + '</p>' +
+// 		'</div>'+
+// 		'</div>';
+// 	return contentString;
+// }
 
 // function to initialize map
 function initMap() {
@@ -73,12 +73,6 @@ function viewModel(){
 	var self = this;
 	var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 	var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
-	// var fsURL = 'https://api.foursquare.com/v2/venues/search'+
-	// 					'?near=Vancouver,BC'+
-	// 					'&categoryId=4bf58dd8d48988d116941735'+
-	// 					'&client_id='+CLIENT_ID+
-	// 					'&client_secret='+CLIENT_SECRET+
-	// 					'&v=20150825';
 
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
 	this.markers = ko.observableArray(); // list of markers
@@ -95,7 +89,6 @@ function viewModel(){
 				'&client_id=' + CLIENT_ID +
 				'&client_secret=' + CLIENT_SECRET +
 				'&v=20150806&m=foursquare',
-            async: true,
             success: function(data){
             	cb(data);
             	//self.locationsList.push(new Location(place));
@@ -103,15 +96,17 @@ function viewModel(){
             error: function(data){
             	console.log('boo');
             }
-		})
-		function cb(data){
-			var venue = data.response.groups[0].items[0].venue
+        });
+        function cb(data){
+			var venue = data.response.groups[0].items[0].venue;
 			place.address = venue.location.formattedAddress[0];
 			place.rating = venue.rating;
 			console.log(place.address, place.rating);
 			console.log(place);
 			self.locationsList.push(new Location(place));
-			console.log(self.locationsList());
+			//console.log(self.locationsList());
+
+			//return self.locationsList();
 		}
 		//self.locationsList.push(new Location(place));
 	});
@@ -135,13 +130,11 @@ function viewModel(){
 		})(marker, place));
 	});
 
-	console.log(self.markers());
-
 	this.setMarker = function(){
 		for (var i = 0; i < self.markers().length; i++){
 			self.markers()[i].setVisible(true);
-		};
-	}
+		}
+	};
 	// filters out list and markers
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
@@ -162,6 +155,8 @@ function viewModel(){
 		}
 	});
 	//console.log(self.markers()[1].title, self.markers()[1].visible);
+	console.log(self.markers());
+	console.log(self.locationsList());
 	console.log(self.locationsList()[0].name(), self.locationsList()[0].address(), self.locationsList()[0].rating());
 }
 // initialize the map
