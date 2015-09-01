@@ -46,21 +46,6 @@ var Location = function(data){
 		'</div>';
 };
 
-// // function to make infoWindow content
-// var contentInfo = function(data){
-// 	var contentString =
-// 		'<div id="content">'+
-// 		'<div id="siteNotice">'+
-// 		'</div>'+
-// 		'<h1 id="firstHeading" class="firstHeading">'+ data.name +'</h1>'+
-// 		'<div id="bodyContent">'+
-// 		'<p><b>Address and Rating</b></p>'+
-// 		'<p>'+ data.address + ', '+ data.rating + '</p>' +
-// 		'</div>'+
-// 		'</div>';
-// 	return contentString;
-// }
-
 // function to initialize Google map
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -80,36 +65,6 @@ function viewModel(){
 
 	// uses hardcoded location data to make an observable array of Locations
 	locationData.forEach(function(place){
-		// $.ajax({
-		// 	url: 'https://api.foursquare.com/v2/venues/explore?',
-		// 	dataType: 'json',
-		// 	data: 'limit=1&ll=' + place.lat +
-		// 		',' + place.lng +
-		// 		'&query=' + place.name +
-		// 		'&client_id=' + CLIENT_ID +
-		// 		'&client_secret=' + CLIENT_SECRET +
-		// 		'&v=20150806&m=foursquare',
-		// 	success: function(data){ // I want to update the hardcoded locations with FS data about their address and rating, then eventually all data regarding the top 10 spots for a certain type of venue
-		// 		cb(data);
-		// 		//self.locationsList.push(new Location(place));
-		// 	},
-		// 	error: function(data){
-		// 		console.log('boo');
-		// 	}
-		// });
-		// function cb(data){
-		// 	var venue = data.response.groups[0].items[0].venue;
-		// 	place.address = venue.location.formattedAddress[0];
-		// 	place.rating = venue.rating;
-		// 	console.log(place);
-		// 	$('#bodyContent').append('HI');
-		// 	console.log($('#bodyContent'));
-		// 	//console.log(self.locationsList()[0].address(), self.locationsList()[0].rating());
-		// 	//self.locationsList.push(new Location(place));
-		// 	//console.log(self.locationsList()); // cb is called three times b/c there's three locationData
-
-		// 	//return self.locationsList();
-		// }
 		self.locationsList.push(new Location(place));
 	});
 
