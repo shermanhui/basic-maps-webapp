@@ -40,8 +40,8 @@ var Location = function(data){
 		'</div>'+
 		'<h1 id="firstHeading" class="firstHeading">'+ self.name() +'</h1>'+
 		'<div id="bodyContent">'+
-		'<p><b>Address and Contact</b></p>'+
-		'<p>'+ self.address() + ', '+ self.rating() + '</p>' +
+		'<p><b>Address and Rating</b></p>'+
+		//'<p>'+ self.address() + ', '+ self.rating() + '</p>' +
 		'</div>'+
 		'</div>';
 };
@@ -80,37 +80,47 @@ function viewModel(){
 
 	// uses hardcoded location data to make an observable array of Locations
 	locationData.forEach(function(place){
-		$.ajax({
-			url: 'https://api.foursquare.com/v2/venues/explore?',
-			dataType: 'json',
-			data: 'limit=1&ll=' + place.lat +
-				',' + place.lng +
-				'&query=' + place.name +
-				'&client_id=' + CLIENT_ID +
-				'&client_secret=' + CLIENT_SECRET +
-				'&v=20150806&m=foursquare',
-            success: function(data){ // I want to update the hardcoded locations with FS data about their address and rating
-            	cb(data);
-            	//self.locationsList.push(new Location(place));
-            },
-            error: function(data){
-            	console.log('boo');
-            }
-        });
-        function cb(data){
-			var venue = data.response.groups[0].items[0].venue;
-			place.address = venue.location.formattedAddress[0];
-			place.rating = venue.rating;
-			console.log(place.address, place.rating);
-			console.log(place);
-			self.locationsList.push(new Location(place));
-			//console.log(self.locationsList()[0].address(), self.locationsList()[0].rating());
-			console.log(self.locationsList());
+		// $.ajax({
+		// 	url: 'https://api.foursquare.com/v2/venues/explore?',
+		// 	dataType: 'json',
+		// 	data: 'limit=1&ll=' + place.lat +
+		// 		',' + place.lng +
+		// 		'&query=' + place.name +
+		// 		'&client_id=' + CLIENT_ID +
+		// 		'&client_secret=' + CLIENT_SECRET +
+		// 		'&v=20150806&m=foursquare',
+		// 	success: function(data){ // I want to update the hardcoded locations with FS data about their address and rating, then eventually all data regarding the top 10 spots for a certain type of venue
+		// 		cb(data);
+		// 		//self.locationsList.push(new Location(place));
+		// 	},
+		// 	error: function(data){
+		// 		console.log('boo');
+		// 	}
+		// });
+		// function cb(data){
+		// 	var venue = data.response.groups[0].items[0].venue;
+		// 	place.address = venue.location.formattedAddress[0];
+		// 	place.rating = venue.rating;
+		// 	console.log(place);
+		// 	$('#bodyContent').append('HI');
+		// 	console.log($('#bodyContent'));
+		// 	//console.log(self.locationsList()[0].address(), self.locationsList()[0].rating());
+		// 	//self.locationsList.push(new Location(place));
+		// 	//console.log(self.locationsList()); // cb is called three times b/c there's three locationData
 
-			//return self.locationsList();
-		}
-		//self.locationsList.push(new Location(place));
+		// 	//return self.locationsList();
+		// }
+		self.locationsList.push(new Location(place));
 	});
+
+	function cb(data){ //takes FS data and for each location in locations list, adds the address and rating for that location
+		var venue = data.response.groups[0].items[0].venue;
+		var address = venue.location.formattedAddress[0];
+		var rating = venue.rating;
+
+		$('#bodyContent').append('<p>'+ address + ', FourSquare rating: ' + rating + '</p>'); // problem here is that there is a delay when populating the info! :(
+		console.log($('#bodyContent'));
+	}
 
 	// for each Location plant a marker at the given lat,lng and on click show the info window
 	self.locationsList().forEach(function(place){
@@ -125,6 +135,22 @@ function viewModel(){
 
 		google.maps.event.addListener(marker, 'click', (function(marker, place) {
 			return function() {
+				$.ajax({
+					url: 'https://api.foursquare.com/v2/venues/explore?',
+					dataType: 'json',
+					data: 'limit=1&ll=' + place.lat() +
+						',' + place.lng() +
+						'&query=' + place.name() +
+						'&client_id=' + CLIENT_ID +
+						'&client_secret=' + CLIENT_SECRET +
+						'&v=20150806&m=foursquare',
+					success: function(data){ // I want to update the hardcoded locations with FS data about their address and rating, then eventually all data regarding the top 10 spots for a certain type of venue
+						cb(data); // callback to set up infoWindow with FS data, problem is I want it to populate in my locationsData for reuse and eventually for nonhardcoded data
+					},
+					error: function(data){
+						console.log('boo');
+					}
+				});
 				infowindow.setContent(place.contentString);
 				infowindow.open(map, marker);
 			};
