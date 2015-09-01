@@ -113,13 +113,13 @@ function viewModel(){
 		self.locationsList.push(new Location(place));
 	});
 
-	function cb(data){ //takes FS data and for each location in locations list, adds the address and rating for that location
+	this.cb = function(data){ //takes FS data and for each location in locations list, adds the address and rating for that location
 		var venue = data.response.groups[0].items[0].venue;
 		var address = venue.location.formattedAddress[0];
 		var rating = venue.rating;
 
 		$('#bodyContent').append('<p>'+ address + ', FourSquare rating: ' + rating + '</p>'); // problem here is that there is a delay when populating the info! :(
-		console.log($('#bodyContent'));
+		//console.log($('#bodyContent'));
 	}
 
 	// for each Location plant a marker at the given lat,lng and on click show the info window
@@ -145,7 +145,7 @@ function viewModel(){
 						'&client_secret=' + CLIENT_SECRET +
 						'&v=20150806&m=foursquare',
 					success: function(data){ // I want to update the hardcoded locations with FS data about their address and rating, then eventually all data regarding the top 10 spots for a certain type of venue
-						cb(data); // callback to set up infoWindow with FS data, problem is I want it to populate in my locationsData for reuse and eventually for nonhardcoded data
+						self.cb(data); // callback to set up infoWindow with FS data, problem is I want it to populate in my locationsData for reuse and eventually for nonhardcoded data
 					},
 					error: function(data){
 						console.log('boo');
@@ -190,4 +190,5 @@ function viewModel(){
 initMap();
 
 // bind KO
-ko.applyBindings(new viewModel());
+var viewModel = new viewModel();
+ko.applyBindings(viewModel);
