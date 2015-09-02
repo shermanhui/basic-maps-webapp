@@ -6,6 +6,14 @@
 //
 var map, marker, bounds;
 var infowindow = new google.maps.InfoWindow();
+
+var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
+var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
+var BAR_ID = '4bf58dd8d48988d116941735';
+var DIVEBAR_ID = '4bf58dd8d48988d118941735';
+var PUB_ID = '4bf58dd8d48988d11b941735';
+var BREWERY_ID = '50327c8591d4c4b30a586d5d';
+
 var locationData = []; //empty array to store data
 
 //make a Location, data to be used for markers and list view
@@ -40,12 +48,10 @@ function initMap() {
 
 function viewModel(){
 	var self = this;
-	var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
-	var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
-	var BAR_ID = '4bf58dd8d48988d116941735';
-	var DIVEBAR_ID = '4bf58dd8d48988d118941735';
-	var PUB_ID = '4bf58dd8d48988d11b941735';
-	var BREWERY_ID = '50327c8591d4c4b30a586d5d';
+	this.locationsList = ko.observableArray(); // list to keep track of Locations
+	this.markers = ko.observableArray(); // list of markers
+	this.filter = ko.observable(''); 	// the filter for search bar
+
 	$.ajax({
 		url: 'https://api.foursquare.com/v2/venues/explore?',
 		dataType: 'json',
@@ -76,17 +82,12 @@ function viewModel(){
 			self.cb(locationData);
 		}
 	});
-	this.locationsList = ko.observableArray(); // list to keep track of Locations
-	this.markers = ko.observableArray(); // list of markers
-	this.filter = ko.observable(''); 	// the filter for search bar
-
-	// uses hardcoded location data to make an observable array of Locations
 
 	this.cb = function(locationData){ //takes FS data and for each location in locations list, adds the address and rating for that location
 		locationData.forEach(function(place){
 			self.locationsList.push(new Location(place));
 		});
-		self.makeMarkers();
+		self.makeMarkers(); // calls function that makes markers on map
 	};
 
 	this.makeMarkers = function(){
@@ -98,9 +99,9 @@ function viewModel(){
 				map: map,
 				title: place.name()
 			});
-			bounds.extend(myLatLng);
-			place.marker = marker;
-			self.markers.push(place.marker);
+			bounds.extend(myLatLng); // extends map bounds to make markers fit on map
+			place.marker = marker; // makes a marker property for each place
+			self.markers.push(place.marker); // pushes a marker into the array of markers to be tracked on search
 
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
 				return function() {
@@ -111,7 +112,7 @@ function viewModel(){
 			map.fitBounds(bounds);
 		});
 	};
-	this.setMarker = function(){
+	this.setMarker = function(){ // for each marker in the list set it to be visible
 		for (var i = 0; i < self.markers().length; i++){
 			self.markers()[i].setVisible(true);
 		}
@@ -121,6 +122,7 @@ function viewModel(){
 		var filter = self.filter().toLowerCase();
 		if (!filter){ // if false return the list as normal
 			self.setMarker();
+			console.log(self.locationsList());
 			return self.locationsList();
 		} else {
 			return ko.utils.arrayFilter(self.locationsList(), function(place){
