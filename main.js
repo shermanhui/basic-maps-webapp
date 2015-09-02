@@ -41,7 +41,7 @@ var Location = function(data){
 		'<h1 id="firstHeading" class="firstHeading">'+ self.name() +'</h1>'+
 		'<div id="bodyContent">'+
 		'<p><b>Address and Rating</b></p>'+
-		//'<p>'+ self.address() + ', '+ self.rating() + '</p>' +
+		'<p>'+ self.address() + ', '+ self.rating() + '</p>' +
 		'</div>'+
 		'</div>';
 };
@@ -84,6 +84,7 @@ function viewModel(){
 				console.log(locationData);
 			}
 			self.cb(locationData);
+			self.make
 		}
 	});
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
@@ -96,7 +97,9 @@ function viewModel(){
 		locationData.forEach(function(place){
 			self.locationsList.push(new Location(place));
 		});
+		self.makeMakers();
 	}
+	this.makeMakers = function(){
 	// for each Location plant a marker at the given lat,lng and on click show the info window
 	self.locationsList().forEach(function(place){
 		marker = new google.maps.Marker({
@@ -115,6 +118,7 @@ function viewModel(){
 			};
 		})(marker, place));
 	});
+}
 
 	this.setMarker = function(){
 		for (var i = 0; i < self.markers().length; i++){
