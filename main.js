@@ -4,25 +4,25 @@
 var map, marker;
 var infowindow = new google.maps.InfoWindow();
 var locationData = [ // hardcoded locations for testing
-	{
-		name: "The Lamplighter",
-		lat: 49.283846,
-		lng: -123.106120,
-		address: '',
-		rating: ''
-	},{
-		name: "The Pint",
-		lat: 49.281399,
-		lng: -123.107622,
-		address: '',
-		rating: ''
-	},{
-		name: "Six Acres",
-		lat: 49.283388,
-		lng: -123.104271,
-		address: '',
-		rating: ''
-	}
+	// {
+	// 	name: "The Lamplighter",
+	// 	lat: 49.283846,
+	// 	lng: -123.106120,
+	// 	address: '',
+	// 	rating: ''
+	// },{
+	// 	name: "The Pint",
+	// 	lat: 49.281399,
+	// 	lng: -123.107622,
+	// 	address: '',
+	// 	rating: ''
+	// },{
+	// 	name: "Six Acres",
+	// 	lat: 49.283388,
+	// 	lng: -123.104271,
+	// 	address: '',
+	// 	rating: ''
+	// }
 ];
 
 //make a Location, data to be used for markers and list view
@@ -58,25 +58,45 @@ function viewModel(){
 	var self = this;
 	var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 	var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
-
+	$.ajax({
+		url: 'https://api.foursquare.com/v2/venues/explore?',
+		dataType: 'json',
+		data: 'limit=5&near=' + 'Vancouver,BC' +
+			'&categoryId=4d4b7105d754a06376d81259' +
+			'&client_id=' + CLIENT_ID +
+			'&client_secret=' + CLIENT_SECRET +
+			'&v=20150806&m=foursquare',
+		success: function(fsData){
+			var response = fsData.response.groups[0].items;
+			for (var i = 0; i < response.length; i++) {
+					var venue = response[i].venue
+					var venueName = venue.name;
+					var venueLoc = venue.location;
+					var venueRating = venue.rating;
+					var obj = {
+						name: venueName,
+						lat: venueLoc.lat,
+						lng: venueLoc.lng,
+						address: venueLoc.formattedAddress[0],
+						rating: venueRating
+					}
+				locationData.push(obj);
+				console.log(locationData);
+			}
+			self.cb(locationData);
+		}
+	});
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
 	this.markers = ko.observableArray(); // list of markers
 	this.filter = ko.observable(''); 	// the filter for search bar
 
 	// uses hardcoded location data to make an observable array of Locations
-	locationData.forEach(function(place){
-		self.locationsList.push(new Location(place));
-	});
 
-	this.cb = function(data){ //takes FS data and for each location in locations list, adds the address and rating for that location
-		var venue = data.response.groups[0].items[0].venue;
-		var address = venue.location.formattedAddress[0];
-		var rating = venue.rating;
-
-		$('#bodyContent').append('<p>'+ address + ', FourSquare rating: ' + rating + '</p>'); // problem here is that there is a delay when populating the info! :(
-		//console.log($('#bodyContent'));
+	this.cb = function(locationData){ //takes FS data and for each location in locations list, adds the address and rating for that location
+		locationData.forEach(function(place){
+			self.locationsList.push(new Location(place));
+		});
 	}
-
 	// for each Location plant a marker at the given lat,lng and on click show the info window
 	self.locationsList().forEach(function(place){
 		marker = new google.maps.Marker({
@@ -90,22 +110,6 @@ function viewModel(){
 
 		google.maps.event.addListener(marker, 'click', (function(marker, place) {
 			return function() {
-				$.ajax({
-					url: 'https://api.foursquare.com/v2/venues/explore?',
-					dataType: 'json',
-					data: 'limit=1&ll=' + place.lat() +
-						',' + place.lng() +
-						'&query=' + place.name() +
-						'&client_id=' + CLIENT_ID +
-						'&client_secret=' + CLIENT_SECRET +
-						'&v=20150806&m=foursquare',
-					success: function(data){ // I want to update the hardcoded locations with FS data about their address and rating, then eventually all data regarding the top 10 spots for a certain type of venue
-						self.cb(data); // callback to set up infoWindow with FS data, problem is I want it to populate in my locationsData for reuse and eventually for nonhardcoded data
-					},
-					error: function(data){
-						console.log('boo');
-					}
-				});
 				infowindow.setContent(place.contentString);
 				infowindow.open(map, marker);
 			};
@@ -136,10 +140,6 @@ function viewModel(){
 			});
 		}
 	});
-	//console.log(self.markers()[1].title, self.markers()[1].visible);
-	console.log(self.markers());
-	console.log(self.locationsList());
-	console.log(self.locationsList()[0].name(), self.locationsList()[0].address(), self.locationsList()[0].rating());
 }
 // initialize the map
 initMap();
