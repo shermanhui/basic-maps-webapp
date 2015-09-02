@@ -41,11 +41,17 @@ function viewModel(){
 	var self = this;
 	var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 	var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
+	var BAR_ID = '4bf58dd8d48988d116941735';
+	var DIVEBAR_ID = '4bf58dd8d48988d118941735';
+	var PUB_ID = '4bf58dd8d48988d11b941735';
+	var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 	$.ajax({
 		url: 'https://api.foursquare.com/v2/venues/explore?',
 		dataType: 'json',
 		data: 'limit=5&near=' + 'Vancouver,BC' +
-			'&categoryId=4d4b7105d754a06376d81259' +
+			'&categoryId=' + BAR_ID +
+			',' + PUB_ID +
+			',' + BREWERY_ID +
 			'&client_id=' + CLIENT_ID +
 			'&client_secret=' + CLIENT_SECRET +
 			'&v=20150806&m=foursquare',
@@ -102,8 +108,6 @@ function viewModel(){
 			})(marker, place));
 		});
 	};
-
-	console.log(self.locationsList());
 	this.setMarker = function(){
 		for (var i = 0; i < self.markers().length; i++){
 			self.markers()[i].setVisible(true);
