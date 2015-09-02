@@ -1,29 +1,12 @@
 // TO DO:
-// Link API data to original hard coded locations i.e address and contact for now
+// Be able to click link in list view to open InfoWindow
+// Close InfoWindow on search
 // Be able to use user defined Location to populate list
+// List must empty out on new search
+//
 var map, marker;
 var infowindow = new google.maps.InfoWindow();
-var locationData = [ // hardcoded locations for testing
-	// {
-	// 	name: "The Lamplighter",
-	// 	lat: 49.283846,
-	// 	lng: -123.106120,
-	// 	address: '',
-	// 	rating: ''
-	// },{
-	// 	name: "The Pint",
-	// 	lat: 49.281399,
-	// 	lng: -123.107622,
-	// 	address: '',
-	// 	rating: ''
-	// },{
-	// 	name: "Six Acres",
-	// 	lat: 49.283388,
-	// 	lng: -123.104271,
-	// 	address: '',
-	// 	rating: ''
-	// }
-];
+var locationData = []; //empty array to store data
 
 //make a Location, data to be used for markers and list view
 var Location = function(data){
@@ -69,7 +52,7 @@ function viewModel(){
 		success: function(fsData){
 			var response = fsData.response.groups[0].items;
 			for (var i = 0; i < response.length; i++) {
-					var venue = response[i].venue
+					var venue = response[i].venue;
 					var venueName = venue.name;
 					var venueLoc = venue.location;
 					var venueRating = venue.rating;
@@ -79,12 +62,11 @@ function viewModel(){
 						lng: venueLoc.lng,
 						address: venueLoc.formattedAddress[0],
 						rating: venueRating
-					}
+					};
 				locationData.push(obj);
 				console.log(locationData);
 			}
 			self.cb(locationData);
-			self.make
 		}
 	});
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
@@ -97,29 +79,31 @@ function viewModel(){
 		locationData.forEach(function(place){
 			self.locationsList.push(new Location(place));
 		});
-		self.makeMakers();
-	}
-	this.makeMakers = function(){
-	// for each Location plant a marker at the given lat,lng and on click show the info window
-	self.locationsList().forEach(function(place){
-		marker = new google.maps.Marker({
-			position: new google.maps.LatLng(place.lat(), place.lng()),
-			map: map,
-			title: place.name()
+		self.makeMarkers();
+	};
+
+	this.makeMarkers = function(){
+		// for each Location plant a marker at the given lat,lng and on click show the info window
+		self.locationsList().forEach(function(place){
+			marker = new google.maps.Marker({
+				position: new google.maps.LatLng(place.lat(), place.lng()),
+				map: map,
+				title: place.name()
+			});
+
+			place.marker = marker;
+			self.markers.push(place.marker);
+
+			google.maps.event.addListener(marker, 'click', (function(marker, place) {
+				return function() {
+					infowindow.setContent(place.contentString);
+					infowindow.open(map, marker);
+				};
+			})(marker, place));
 		});
+	};
 
-		place.marker = marker;
-		self.markers.push(place.marker);
-
-		google.maps.event.addListener(marker, 'click', (function(marker, place) {
-			return function() {
-				infowindow.setContent(place.contentString);
-				infowindow.open(map, marker);
-			};
-		})(marker, place));
-	});
-}
-
+	console.log(self.locationsList());
 	this.setMarker = function(){
 		for (var i = 0; i < self.markers().length; i++){
 			self.markers()[i].setVisible(true);
