@@ -4,7 +4,7 @@
 // Be able to use user defined Location to populate list
 // List must empty out on new search
 //
-var map, marker;
+var map, marker, bounds;
 var infowindow = new google.maps.InfoWindow();
 var locationData = []; //empty array to store data
 
@@ -31,6 +31,7 @@ var Location = function(data){
 
 // function to initialize Google map
 function initMap() {
+	bounds = new google.maps.LatLngBounds();
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 49.2844, lng: -123.1089},
 		zoom: 15
@@ -91,12 +92,13 @@ function viewModel(){
 	this.makeMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
 		self.locationsList().forEach(function(place){
+			var myLatLng = new google.maps.LatLng(place.lat(), place.lng());
 			marker = new google.maps.Marker({
 				position: new google.maps.LatLng(place.lat(), place.lng()),
 				map: map,
 				title: place.name()
 			});
-
+			bounds.extend(myLatLng);
 			place.marker = marker;
 			self.markers.push(place.marker);
 
@@ -106,6 +108,7 @@ function viewModel(){
 					infowindow.open(map, marker);
 				};
 			})(marker, place));
+			map.fitBounds(bounds);
 		});
 	};
 	this.setMarker = function(){
