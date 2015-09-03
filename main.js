@@ -1,5 +1,4 @@
 // TO DO:
-// Be able to click link in list view to open InfoWindow
 // Close InfoWindow on search
 // Be able to use user defined Location to populate list
 // List must empty out on new search
@@ -32,7 +31,7 @@ var Location = function(data){
 		'<h1 id="firstHeading" class="firstHeading">'+ self.name() +'</h1>'+
 		'<div id="bodyContent">'+
 		'<p><b>Address and Rating</b></p>'+
-		'<p>'+ self.address() + ', '+ self.rating() + '</p>' +
+		'<p>'+ self.address() + ', Rating: '+ self.rating() + '</p>' +
 		'</div>'+
 		'</div>';
 };
@@ -113,11 +112,11 @@ function viewModel(){
 		});
 	};
 
-	this.listOpen = function(data){
-		var openItem = data.name();
+	this.listOpen = function(data){ // takes in the relevant Location Object
+		var listItem = data.name(); // pulls the Location name
 		var len = self.markers().length;
 		for (var i = 0; i < len; i++){
-			if (openItem === self.markers()[i].title){
+			if (listItem === self.markers()[i].title){ // If the clicked list item's name matches a relevant marker, then we display the infoWindow
 				infowindow.setContent(data.contentString);
 				infowindow.open(map, self.markers()[i]);
 			}
