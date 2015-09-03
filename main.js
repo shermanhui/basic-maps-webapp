@@ -77,7 +77,7 @@ function viewModel(){
 						rating: venueRating
 					};
 				locationData.push(obj);
-				console.log(locationData);
+				//console.log(locationData);
 			}
 			self.cb(locationData);
 		}
@@ -112,6 +112,18 @@ function viewModel(){
 			map.fitBounds(bounds);
 		});
 	};
+
+	this.listOpen = function(data){
+		var openItem = data.name();
+		var len = self.markers().length;
+		for (var i = 0; i < len; i++){
+			if (openItem === self.markers()[i].title){
+				infowindow.setContent(data.contentString);
+				infowindow.open(map, self.markers()[i]);
+			}
+		};
+	};
+
 	this.setMarker = function(){ // for each marker in the list set it to be visible
 		for (var i = 0; i < self.markers().length; i++){
 			self.markers()[i].setVisible(true);
@@ -122,7 +134,7 @@ function viewModel(){
 		var filter = self.filter().toLowerCase();
 		if (!filter){ // if false return the list as normal
 			self.setMarker();
-			console.log(self.locationsList());
+			//console.log(self.locationsList());
 			return self.locationsList();
 		} else {
 			return ko.utils.arrayFilter(self.locationsList(), function(place){

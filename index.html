@@ -6,7 +6,7 @@
 		html, body { height: 100%; margin: 0; padding: 0; }
 		#wrapper {position:relative;}
 		#search-bar {position: relative;}
-		#map {position: relative; height: 100%; }
+		#map {position: relative; height: 100%; width:100%;}
 		#list {position: absolute; z-index: 99; height: 200px; width: 100px; right: 100px; top: 50px;}
     </style>
 </head>
@@ -15,7 +15,7 @@
 		<input id="search-bar" placeholder="Search Here" type="search" data-bind="value: filter, valueUpdate: 'keyup'" autocomplete="off">
 		<div id='list'>
 			<ul data-bind='foreach: searchFilter'>
-				<li data-bind='text: name'></li>
+				<li data-bind='text: name, click: $parent.listOpen'></li>
 			</ul>
 		</div>
 		<div id='map'></div>
