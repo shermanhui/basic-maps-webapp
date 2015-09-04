@@ -1,0 +1,39 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+#wrapper {
+	position:relative;
+}
+
+#search-bar {
+	position: relative;
+}
+
+#map {
+	position: relative;
+	height: 100%;
+	width:100%;
+}
+
+#list {
+	position: absolute;
+	height: 50%;
+	width: 25%;
+	overflow-y: auto;
+	font-size: 1.5em;
+
+}
+
+li {
+	list-style-type: none;
+	background:rgba(255,255,255,0.5);
+	padding: 50px 0;
+	margin: 10px auto;
+	text-align: center;
+	border-style: solid;
+	border-width: 0.2em;
+	border-color: black;
+}

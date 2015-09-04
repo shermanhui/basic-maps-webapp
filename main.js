@@ -49,6 +49,8 @@ function initMap() {
 		google.maps.event.trigger(map, "resize");
 		map.setCenter(center);
 	});
+
+	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'))
 }
 
 function viewModel(){
@@ -60,7 +62,7 @@ function viewModel(){
 	$.ajax({
 		url: 'https://api.foursquare.com/v2/venues/explore?',
 		dataType: 'json',
-		data: 'limit=5&near=' + 'Vancouver,BC' +
+		data: 'limit=10&near=' + 'Vancouver,BC' +
 			'&categoryId=' + BAR_ID +
 			',' + PUB_ID +
 			',' + BREWERY_ID +
