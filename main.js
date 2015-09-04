@@ -1,7 +1,7 @@
 // TO DO:
 // Close InfoWindow on search
 // Be able to use user defined Location to populate list
-// List must empty out on new search
+// List must empty out on new Location set up
 //
 var map, marker, bounds;
 var infowindow = new google.maps.InfoWindow();
@@ -42,6 +42,12 @@ function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 49.2844, lng: -123.1089},
 		zoom: 15
+	});
+
+	google.maps.event.addDomListener(window, "resize", function() {
+		var center = map.getCenter();
+		google.maps.event.trigger(map, "resize");
+		map.setCenter(center);
 	});
 }
 
@@ -112,15 +118,16 @@ function viewModel(){
 		});
 	};
 
-	this.listOpen = function(data){ // takes in the relevant Location Object
+	this.openFromList = function(data){ // takes in the relevant Location Object
 		var listItem = data.name(); // pulls the Location name
 		var len = self.markers().length;
 		for (var i = 0; i < len; i++){
 			if (listItem === self.markers()[i].title){ // If the clicked list item's name matches a relevant marker, then we display the infoWindow
+				map.panTo(self.markers()[i].position);
 				infowindow.setContent(data.contentString);
 				infowindow.open(map, self.markers()[i]);
 			}
-		};
+		}
 	};
 
 	this.setMarker = function(){ // for each marker in the list set it to be visible
@@ -128,6 +135,7 @@ function viewModel(){
 			self.markers()[i].setVisible(true);
 		}
 	};
+
 	// filters out list and markers
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
