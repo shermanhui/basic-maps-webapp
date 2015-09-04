@@ -49,20 +49,17 @@ function initMap() {
 		google.maps.event.trigger(map, "resize");
 		map.setCenter(center);
 	});
-
+	loadLocations('Vancouver, BC');
+	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('global-search'))
+	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('search-bar'))
 	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'))
 }
 
-function viewModel(){
-	var self = this;
-	this.locationsList = ko.observableArray(); // list to keep track of Locations
-	this.markers = ko.observableArray(); // list of markers
-	this.filter = ko.observable(''); 	// the filter for search bar
-
+function loadLocations(location){
 	$.ajax({
 		url: 'https://api.foursquare.com/v2/venues/explore?',
 		dataType: 'json',
-		data: 'limit=10&near=' + 'Vancouver,BC' +
+		data: 'limit=10&near=' + location +
 			'&categoryId=' + BAR_ID +
 			',' + PUB_ID +
 			',' + BREWERY_ID +
@@ -86,11 +83,18 @@ function viewModel(){
 				locationData.push(obj);
 				//console.log(locationData);
 			}
-			self.cb(locationData);
+			viewModel.initialize(locationData);
 		}
 	});
+}
 
-	this.cb = function(locationData){ //takes FS data and for each location in locations list, adds the address and rating for that location
+function viewModel(){
+	var self = this;
+	this.locationsList = ko.observableArray(); // list to keep track of Locations
+	this.markers = ko.observableArray(); // list of markers
+	this.filter = ko.observable(''); 	// the filter for search bar
+
+	this.initialize = function(locationData){ //takes FS data and for each location in locations list, adds the address and rating for that location
 		locationData.forEach(function(place){
 			self.locationsList.push(new Location(place));
 		});
@@ -143,6 +147,7 @@ function viewModel(){
 		var filter = self.filter().toLowerCase();
 		if (!filter){ // if false return the list as normal
 			self.setMarker();
+			infowindow.close();
 			//console.log(self.locationsList());
 			return self.locationsList();
 		} else {

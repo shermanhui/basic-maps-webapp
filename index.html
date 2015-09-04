@@ -6,7 +6,8 @@
 </head>
 <body>
 	<div id="wrapper">
-		<input id="search-bar" placeholder="Search Here" type="search" data-bind="value: filter, valueUpdate: 'keyup'" autocomplete="off">
+		<input id="search-bar" placeholder="Search Locations Here" type="search" data-bind="value: filter, valueUpdate: 'keyup'" autocomplete="off">
+		<input id="global-search" placeholder="Enter City Here" type="search" data-bind="value: loadLocations(), valueUpdate: 'enter'" autocomplete="off">
 		<div id='list'>
 			<ul data-bind='foreach: searchFilter'>
 				<li data-bind='text: name, click: $parent.openFromList'></li>
