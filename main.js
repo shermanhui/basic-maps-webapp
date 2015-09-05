@@ -44,12 +44,13 @@ function initMap() {
 		zoom: 15
 	});
 
-	google.maps.event.addDomListener(window, "resize", function() {
+	google.maps.event.addDomListener(window, "resize", function() {	// browser resize triggers map resize for responsiveness
 		var center = map.getCenter();
 		google.maps.event.trigger(map, "resize");
 		map.setCenter(center);
 	});
 
+	// adds search bars and list view onto map
 	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('global-search'))
 	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('search-bar'))
 	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'))
@@ -94,13 +95,6 @@ function viewModel(){
 			}
 		});
 	};
-
-	this.searchLocations = ko.computed(function(){
-		var location = self.locinput();
-		self.markers.removeAll();
-		self.locationsList.removeAll();
-		self.loadLocations(location);
-	});
 
 	this.initialize = function(locationData){ //takes FS data and for each location in locations list, adds the address and rating for that location
 		locationData.forEach(function(place){
@@ -150,6 +144,13 @@ function viewModel(){
 		}
 	};
 
+	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
+		var location = self.locinput().toLowerCase();
+		self.markers.removeAll();
+		self.locationsList.removeAll();
+		self.loadLocations(location);
+	}, this);
+
 	// filters out list and markers
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
@@ -171,7 +172,9 @@ function viewModel(){
 			});
 		}
 	});
-	self.loadLocations(self.locinput()); // probably need to put this into a function that gets called on search
+	//self.loadLocations("Seattle, WA"); // loadLocations works, need to figure out how to implement it w/ KO
+	//self.loadLocations("NY")
+	//console.log(self.loadLocations(self.locinput()))
 }
 // initialize the map
 initMap();
