@@ -138,6 +138,11 @@ function viewModel(){
 		}
 	};
 
+	this.clearData = function(){
+		self.markers = ([]);
+		self.locationsList = ([]);
+	};
+
 	this.setMarker = function(){ // for each marker in the list set it to be visible
 		for (var i = 0; i < self.markers().length; i++){
 			self.markers()[i].setVisible(true);
@@ -146,8 +151,6 @@ function viewModel(){
 
 	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
 		var location = self.locinput().toLowerCase();
-		self.markers.removeAll();
-		self.locationsList.removeAll();
 		self.loadLocations(location);
 	}, this);
 
@@ -172,9 +175,6 @@ function viewModel(){
 			});
 		}
 	});
-	//self.loadLocations("Seattle, WA"); // loadLocations works, need to figure out how to implement it w/ KO
-	//self.loadLocations("NY")
-	//console.log(self.loadLocations(self.locinput()))
 }
 // initialize the map
 initMap();
