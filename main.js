@@ -1,7 +1,7 @@
 // TO DO:
-// Close InfoWindow on search
-// List must empty out on new Location set up
-// Allow user to create a "route" for pub crawl
+// Close InfoWindow on search - not working
+// List must empty out on new Location set up - not working
+// Allow user to create a "route" for pub crawl - semi-working: locations not specific enough to produce accurate data, also need to add functionality that allows user to set start/end routes
 // Style Project
 
 var map, marker, bounds;
@@ -184,7 +184,7 @@ function viewModel(){
 			destination: self.crawlList()[self.crawlList().length - 1],
 			waypoints: waypoints,
 			optimizeWaypoints: true,
-			travelMode: google.maps.TravelMode.WALKING
+			travelMode: google.maps.TravelMode.DRIVING
 		}, function(response, status){
 			if (status === google.maps.DirectionsStatus.OK){
 				directionsDisplay.setDirections(response);
@@ -203,6 +203,9 @@ function viewModel(){
 				alert('Directions request failed due to' + status);
 			}
 		});
+
+		directionsDisplay.setMap(map);
+
 	};
 
 	this.makeRoute = function(directionsService, directionsDisplay){
