@@ -6,14 +6,23 @@
 </head>
 <body>
 	<div id="wrapper">
+		<input id="global-search" placeholder="City, State" type="search" data-bind="value: locInput" autocomplete="off">
 		<input id="search-bar" placeholder="Filter Locations" type="search" data-bind="value: filter, valueUpdate: 'keyup'" autocomplete="off">
-		<input id="global-search" placeholder="City, State" type="search" data-bind="value: locinput" autocomplete="off">
 		<div id='list'>
 			<ul data-bind='foreach: searchFilter'>
-				<li data-bind='text: name, click: $parent.openFromList'></li>
+				<li>
+					<div>
+						<p class="venue-name" data-bind='text: name, click: $parent.openFromList'></p>
+						<button class="add">Add</button>
+						<button class="remove">Remove</button>
+					</div>
+				</li>
 			</ul>
 		</div>
 		<div id='map'></div>
+	</div>
+	<div id="route-display">
+		<h2>Your Crawl Route</h2>
 	</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>

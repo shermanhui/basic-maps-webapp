@@ -1,10 +1,13 @@
 // TO DO:
 // Close InfoWindow on search
-// Be able to use user defined Location to populate list
 // List must empty out on new Location set up
-//
+// Allow user to create a "route" for pub crawl
+// Style Project
+
 var map, marker, bounds;
-var infowindow = new google.maps.InfoWindow();
+var infoWindow = new google.maps.InfoWindow();
+var directionsService = new google.maps.DirectionsService;
+var directionsDisplay = new google.maps.DirectionsRenderer;
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -61,9 +64,14 @@ function viewModel(){
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
 	this.markers = ko.observableArray(); // list of markers
 	this.filter = ko.observable(''); 	// the filter for search bar
-	this.locinput = ko.observable('Vancouver, BC')   // user defined location input
+	this.locInput = ko.observable('Vancouver, BC')   // user defined location input
 
-	this.loadLocations = function(location){
+	this.clearData = function(){
+		self.markers.removeAll(); // should remove all values and return an empty array
+		self.locationsList.removeAll();
+	};
+
+	this.loadLocations = function(location){ // takes a user defined location; Vancouver, BC to start with
 		$.ajax({
 			url: 'https://api.foursquare.com/v2/venues/explore?',
 			dataType: 'json',
@@ -96,7 +104,13 @@ function viewModel(){
 		});
 	};
 
-	this.initialize = function(locationData){ //takes FS data and for each location in locations list, adds the address and rating for that location
+	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
+		var location = self.locInput().toLowerCase();
+		self.clearData();
+		self.loadLocations(location);
+	});
+
+	this.initialize = function(locationData){ //takes FS data and for each location in locations list, builds a Location object to be pushed into self.locationsList()
 		locationData.forEach(function(place){
 			self.locationsList.push(new Location(place));
 		});
@@ -118,8 +132,8 @@ function viewModel(){
 
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
 				return function() {
-					infowindow.setContent(place.contentString);
-					infowindow.open(map, marker);
+					infoWindow.setContent(place.contentString);
+					infoWindow.open(map, marker);
 				};
 			})(marker, place));
 			map.fitBounds(bounds);
@@ -127,21 +141,21 @@ function viewModel(){
 	};
 
 	this.openFromList = function(data){ // takes in the relevant Location Object
-		var listItem = data.name(); // pulls the Location name
+		var listItem = data.name(); // pulls the Location name from clicked list item
 		var len = self.markers().length;
 		for (var i = 0; i < len; i++){
 			if (listItem === self.markers()[i].title){ // If the clicked list item's name matches a relevant marker, then we display the infoWindow
-				map.panTo(self.markers()[i].position);
-				infowindow.setContent(data.contentString);
-				infowindow.open(map, self.markers()[i]);
+				map.panTo(self.markers()[i].position); // pans to marker
+				infoWindow.setContent(data.contentString);
+				infoWindow.open(map, self.markers()[i]);
 			}
 		}
 	};
 
-	this.clearData = function(){
-		self.markers = ([]);
-		self.locationsList = ([]);
-	};
+	this.makeRoute = function(directionsService, directionsDisplay){
+		var waypoints = [];
+		var check;
+	}
 
 	this.setMarker = function(){ // for each marker in the list set it to be visible
 		for (var i = 0; i < self.markers().length; i++){
@@ -149,17 +163,12 @@ function viewModel(){
 		}
 	};
 
-	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
-		var location = self.locinput().toLowerCase();
-		self.loadLocations(location);
-	}, this);
-
 	// filters out list and markers
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
 		if (!filter){ // if false return the list as normal
 			self.setMarker();
-			infowindow.close();
+			infoWindow.close();
 			//console.log(self.locationsList());
 			return self.locationsList();
 		} else {
