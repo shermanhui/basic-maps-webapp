@@ -13,8 +13,8 @@
 				<li>
 					<div>
 						<p class="venue-name" data-bind='text: name, click: $parent.openFromList'></p>
-						<button class="add">Add</button>
-						<button class="remove">Remove</button>
+						<button class="add" data-bind='click: $parent.addToRoute'>Add</button>
+						<button class="remove" data-bind='click: $parent.removeFromRoute'>Remove</button>
 					</div>
 				</li>
 			</ul>
@@ -23,6 +23,12 @@
 	</div>
 	<div id="route-display">
 		<h2>Your Crawl Route</h2>
+		<ul data-bind='foreach: crawlList'>
+			<li data-bind='text: $data'></li>
+		</ul>
+		<button data-bind='click: makeRoute'>Create Route!</button>
+		<div id="directions_panel" class="panel" style="margin:20px;background-color:#FFEE77;"></div>
+    </div>
 	</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>

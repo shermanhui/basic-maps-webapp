@@ -6,8 +6,6 @@
 
 var map, marker, bounds;
 var infoWindow = new google.maps.InfoWindow();
-var directionsService = new google.maps.DirectionsService;
-var directionsDisplay = new google.maps.DirectionsRenderer;
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -54,17 +52,18 @@ function initMap() {
 	});
 
 	// adds search bars and list view onto map
-	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('global-search'))
-	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('search-bar'))
-	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'))
+	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('global-search'));
+	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('search-bar'));
+	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
 }
 
 function viewModel(){
 	var self = this;
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
 	this.markers = ko.observableArray(); // list of markers
+	this.crawlList = ko.observableArray(); // list of user selected venues
 	this.filter = ko.observable(''); 	// the filter for search bar
-	this.locInput = ko.observable('Vancouver, BC')   // user defined location input
+	this.locInput = ko.observable('Vancouver, BC');  // user defined location input
 
 	this.clearData = function(){
 		self.markers.removeAll(); // should remove all values and return an empty array
@@ -152,10 +151,63 @@ function viewModel(){
 		}
 	};
 
-	this.makeRoute = function(directionsService, directionsDisplay){
+	this.addToRoute = function(place){
+		var selectedVenue = place.name();
+		console.log(place);
+		if (!($.inArray(selectedVenue, self.crawlList()) > -1)){
+			self.crawlList.push(selectedVenue);
+		} else {
+			alert('duplicate');
+		}
+		console.log(self.crawlList());
+	};
+
+	this.removeFromRoute = function(place){
+		var selectedVenue = place.name();
+		self.crawlList.remove(selectedVenue);
+	};
+
+	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
+		var directionsService = new google.maps.DirectionsService;
+		var directionsDisplay = new google.maps.DirectionsRenderer;
+
 		var waypoints = [];
-		var check;
-	}
+		for (var i = 0; i < self.crawlList().length; i++){
+			waypoints.push({
+				location: self.crawlList()[i],
+				stopover: true
+			});
+		}
+
+		directionsService.route({
+			origin: self.crawlList()[0],
+			destination: self.crawlList()[self.crawlList().length - 1],
+			waypoints: waypoints,
+			optimizeWaypoints: true,
+			travelMode: google.maps.TravelMode.WALKING
+		}, function(response, status){
+			if (status === google.maps.DirectionsStatus.OK){
+				directionsDisplay.setDirections(response);
+				var route = response.routes[0];
+				var summaryPanel = document.getElementById('directions_panel');
+				summaryPanel.innerHTML = '';
+				for (var i = 0; i < route.legs.length; i++){
+					var routeSegment = i + 1;
+					summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
+					'</b><br>';
+					summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+					summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
+					summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+				}
+			} else {
+				alert('Directions request failed due to' + status);
+			}
+		});
+	};
+
+	this.makeRoute = function(directionsService, directionsDisplay){
+		self.calculateAndDisplayRoute(directionsService, directionsDisplay);
+	};
 
 	this.setMarker = function(){ // for each marker in the list set it to be visible
 		for (var i = 0; i < self.markers().length; i++){

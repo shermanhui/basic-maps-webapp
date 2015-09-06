@@ -15,7 +15,7 @@ html, body {
 	height: 100%;
 	width:100%;
 }
-
+/* ListView CSS */
 #list {
 	position: absolute;
 	height: 50%;
@@ -24,17 +24,7 @@ html, body {
 	font-size: 1.5em;
 }
 
-#route-display{
-	position: relative;
-	float: left;
-	width: 15%;
-}
-
-.venue-name:hover{
-	font-weight: bold;
-}
-
-li {
+#list li {
 	list-style-type: none;
 	background:rgba(255,255,255,0.8);
 	padding: 40px 0;
@@ -43,4 +33,28 @@ li {
 	border-style: solid;
 	border-width: 0.2em;
 	border-color: black;
+}
+
+.venue-name:hover{
+	font-weight: bold;
+}
+/* ListView CSS END */
+
+/* Crawl Route CSS */
+#route-display {
+	position: absolute;
+	float: left;
+	width: 15%;
+	height: 100%;
+	text-align: center;
+	overflow-y: auto;
+}
+
+#route-display ul {
+	padding: 0;
+}
+
+#route-display li{
+	list-style-type: none;
+	text-align: center;
 }
