@@ -23,11 +23,12 @@
 	</div>
 	<div id="route-display">
 		<h2>Your Crawl Route</h2>
-		<ul data-bind='foreach: crawlList'>
-			<li data-bind='text: $data.name()'></li>
-		</ul>
+		<ol data-bind='foreach: crawlList'>
+			<li data-bind='text: $data.name()'>
+			</li>
+		</ol>
 		<button data-bind='click: makeRoute'>Create Route!</button>
-		<div id="directions_panel" class="panel" style="margin:20px;background-color:#FFEE77;"></div>
+		<div id="directions-panel" class="panel"></div>
     </div>
 	</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>

@@ -1,8 +1,9 @@
 // TO DO:
 // Close InfoWindow on search - not working
 // List must empty out on new Location set up - not working
-// Allow user to create a "route" for pub crawl - semi-working: locations not specific enough to produce accurate data, also need to add functionality that allows user to set start/end routes
+// Allow user to create a "route" for pub crawl - semi-working: route creation isn't very smart, it also over keeps creating route if user spams "create route"
 // Style Project
+// Duplicate markers when route is created
 
 var map, marker, bounds;
 var infoWindow = new google.maps.InfoWindow();
@@ -99,7 +100,7 @@ function viewModel(){
 					locationData.push(obj);
 					//console.log(locationData);
 				}
-				self.initialize(locationData); // callback function to populate locationData with FSdata
+				self.initialize(); // callback function to populate locationData with FSdata
 			}
 		});
 	};
@@ -110,7 +111,7 @@ function viewModel(){
 		self.loadLocations(location);
 	});
 
-	this.initialize = function(locationData){ //takes FS data and for each location in locations list, builds a Location object to be pushed into self.locationsList()
+	this.initialize = function(){ //takes FS data and for each location in locations list, builds a Location object to be pushed into self.locationsList()
 		locationData.forEach(function(place){
 			self.locationsList.push(new Location(place));
 		});
@@ -140,30 +141,32 @@ function viewModel(){
 		});
 	};
 
-	this.openFromList = function(data){ // takes in the relevant Location Object
-		var listItem = data.name(); // pulls the Location name from clicked list item
+	this.openFromList = function(place){ // takes in the relevant Location Object
+		var listItem = place.name(); // pulls the Location name from clicked list item
 		var len = self.markers().length;
 		for (var i = 0; i < len; i++){
 			if (listItem === self.markers()[i].title){ // If the clicked list item's name matches a relevant marker, then we display the infoWindow
 				map.panTo(self.markers()[i].position); // pans to marker
-				infoWindow.setContent(data.contentString);
+				infoWindow.setContent(place.contentString);
 				infoWindow.open(map, self.markers()[i]);
 			}
 		}
 	};
 
-	this.addToRoute = function(place){
-		var selectedVenueName = place.name();
-		if (!($.inArray(place, self.crawlList()) > -1)){ //filter won't work if I'm pushing an object versus just a name;
+	this.addToRoute = function(place){ // takes in a location object and adds it to crawlList so user can create a route
+		if (!($.inArray(place, self.crawlList()) > -1)){  // checks for duplicate locations
 			self.crawlList.push(place);
 		} else {
 			alert('duplicate');
 		}
-		console.log(self.crawlList());
 	};
 
-	this.removeFromRoute = function(place){ //remove function won't work because I'm pushing places to get the route creation to work
-		self.crawlList.remove(place);
+	this.removeFromRoute = function(place){ // removes location from list
+		if ($.inArray(place, self.crawlList()) > -1){  // checks for duplicate locations
+			self.crawlList.remove(place);
+		} else {
+			alert('Nothing to Remove');
+		}
 	};
 
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
@@ -179,12 +182,11 @@ function viewModel(){
 				stopover: true
 			});
 			console.log(waypoints)
-			console.log(self.crawlList()[0].address());
 		}
 
 		directionsService.route({
-			origin: {lat: self.crawlList()[0].lat(), lng: self.crawlList()[0].lng()},
-			destination: {lat: self.crawlList()[self.crawlList().length - 1].lat(), lng: self.crawlList()[self.crawlList().length - 1].lng()},
+			origin: waypoints[1]['location'],//{lat: self.crawlList()[0].lat(), lng: self.crawlList()[0].lng()},
+			destination: waypoints[waypoints.length - 1]['location'],//{lat: self.crawlList()[self.crawlList().length - 1].lat(), lng: self.crawlList()[self.crawlList().length - 1].lng()},
 			waypoints: waypoints,
 			optimizeWaypoints: false,
 			travelMode: google.maps.TravelMode.WALKING
@@ -192,24 +194,13 @@ function viewModel(){
 			if (status === google.maps.DirectionsStatus.OK){
 				directionsDisplay.setDirections(response);
 				var route = response.routes[0];
-				console.log(route);
-				// var summaryPanel = document.getElementById('directions_panel');
-				// summaryPanel.innerHTML = '';
-				// for (var i = 0; i < route.legs.length; i++){
-				// 	var routeSegment = i + 1;
-				// 	summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
-				// 	'</b><br>';
-				// 	summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
-				// 	summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-				// 	summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
-				// }
 			} else {
-				alert('Directions request failed due to' + status);
+				alert('Directions request failed due to ' + status);
 			}
 		});
 
 		directionsDisplay.setMap(map);
-
+		directionsDisplay.setPanel(document.getElementById('directions-panel'));
 	};
 
 	this.makeRoute = function(directionsService, directionsDisplay){
