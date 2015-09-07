@@ -83,6 +83,7 @@ function viewModel(){
 				'&v=20150806&m=foursquare',
 			success: function(fsData){
 				var response = fsData.response.groups[0].items;
+				console.log(response);
 				for (var i = 0; i < response.length; i++) {
 						var venue = response[i].venue;
 						var venueName = venue.name;
@@ -92,7 +93,7 @@ function viewModel(){
 							name: venueName,
 							lat: venueLoc.lat,
 							lng: venueLoc.lng,
-							address: venueLoc.formattedAddress[0],
+							address: venueLoc.address,
 							rating: venueRating
 						};
 					locationData.push(obj);
@@ -121,7 +122,7 @@ function viewModel(){
 		self.locationsList().forEach(function(place){
 			var myLatLng = new google.maps.LatLng(place.lat(), place.lng());
 			marker = new google.maps.Marker({
-				position: new google.maps.LatLng(place.lat(), place.lng()),
+				position: myLatLng,
 				map: map,
 				title: place.name()
 			});
@@ -152,10 +153,9 @@ function viewModel(){
 	};
 
 	this.addToRoute = function(place){
-		var selectedVenue = place.name();
-		console.log(place);
-		if (!($.inArray(selectedVenue, self.crawlList()) > -1)){
-			self.crawlList.push(selectedVenue);
+		var selectedVenueName = place.name();
+		if (!($.inArray(selectedVenueName, self.crawlList()) > -1)){ //filter won't work if I'm pushing an object versus just a name;
+			self.crawlList.push(place);
 		} else {
 			alert('duplicate');
 		}
@@ -173,15 +173,19 @@ function viewModel(){
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
+			var venueLat = self.crawlList()[i].lat();
+			var venueLng = self.crawlList()[i].lng();
 			waypoints.push({
-				location: self.crawlList()[i],
+				location: {lat: venueLat, lng: venueLng},
 				stopover: true
 			});
+			console.log(waypoints)
+			console.log(self.crawlList()[0].address());
 		}
 
 		directionsService.route({
-			origin: self.crawlList()[0],
-			destination: self.crawlList()[self.crawlList().length - 1],
+			origin: {lat: self.crawlList()[0].lat(), lng: self.crawlList()[0].lng()},
+			destination: {lat: self.crawlList()[self.crawlList().length - 1].lat(), lng: self.crawlList()[self.crawlList().length - 1].lng()},
 			waypoints: waypoints,
 			optimizeWaypoints: true,
 			travelMode: google.maps.TravelMode.DRIVING
@@ -189,16 +193,17 @@ function viewModel(){
 			if (status === google.maps.DirectionsStatus.OK){
 				directionsDisplay.setDirections(response);
 				var route = response.routes[0];
-				var summaryPanel = document.getElementById('directions_panel');
-				summaryPanel.innerHTML = '';
-				for (var i = 0; i < route.legs.length; i++){
-					var routeSegment = i + 1;
-					summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
-					'</b><br>';
-					summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
-					summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-					summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
-				}
+				console.log(route);
+				// var summaryPanel = document.getElementById('directions_panel');
+				// summaryPanel.innerHTML = '';
+				// for (var i = 0; i < route.legs.length; i++){
+				// 	var routeSegment = i + 1;
+				// 	summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
+				// 	'</b><br>';
+				// 	summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+				// 	summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
+				// 	summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+				// }
 			} else {
 				alert('Directions request failed due to' + status);
 			}
