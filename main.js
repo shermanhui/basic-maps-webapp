@@ -154,7 +154,7 @@ function viewModel(){
 
 	this.addToRoute = function(place){
 		var selectedVenueName = place.name();
-		if (!($.inArray(selectedVenueName, self.crawlList()) > -1)){ //filter won't work if I'm pushing an object versus just a name;
+		if (!($.inArray(place, self.crawlList()) > -1)){ //filter won't work if I'm pushing an object versus just a name;
 			self.crawlList.push(place);
 		} else {
 			alert('duplicate');
@@ -162,9 +162,8 @@ function viewModel(){
 		console.log(self.crawlList());
 	};
 
-	this.removeFromRoute = function(place){
-		var selectedVenue = place.name();
-		self.crawlList.remove(selectedVenue);
+	this.removeFromRoute = function(place){ //remove function won't work because I'm pushing places to get the route creation to work
+		self.crawlList.remove(place);
 	};
 
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
@@ -187,8 +186,8 @@ function viewModel(){
 			origin: {lat: self.crawlList()[0].lat(), lng: self.crawlList()[0].lng()},
 			destination: {lat: self.crawlList()[self.crawlList().length - 1].lat(), lng: self.crawlList()[self.crawlList().length - 1].lng()},
 			waypoints: waypoints,
-			optimizeWaypoints: true,
-			travelMode: google.maps.TravelMode.DRIVING
+			optimizeWaypoints: false,
+			travelMode: google.maps.TravelMode.WALKING
 		}, function(response, status){
 			if (status === google.maps.DirectionsStatus.OK){
 				directionsDisplay.setDirections(response);
