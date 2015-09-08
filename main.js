@@ -33,6 +33,7 @@ var Location = function(data){
 	// 	title: self.name()
 	// });
 	// bounds.extend(self.latlng());
+	// map.fitBounds(bounds);
 
 	this.contentString = // create content string for infoWindow
 		'<div id="content">'+
@@ -100,25 +101,26 @@ function viewModel(){
 							rating: venueRating
 						};
 					locationData.push(obj);
+					//console.log(locationData);
 				}
 				self.initialize(); // callback function to populate locationData with FSdata
 			},
 			error: function(error){
-				alert('There was an error: ' + error);
+				alert('There was a problem retrieving the requested data, please double check your query');
 			}
 		});
 	};
 
-	this.clearData = function(){
-		locationData.length = 0;
-		self.locationsList.removeAll();
-		self.crawlList.removeAll();
-		self.markers.removeAll(); // this doesn't do anything right now...Intended use is to remove all markers from the map
+	this.clearPreviousLocationData = function(){
+		locationData.length = 0; // set array length to 0 to clear arrays
+		self.crawlList.removeAll(); // clears crawlList from view
+		self.markers.removeAll(); // should remove all markers
+		self.locationsList.removeAll(); // removes all list items and clears listView
 	};
 
 	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
 		var location = self.locInput().toLowerCase();
-		self.clearData();
+		self.clearPreviousLocationData();
 		self.loadLocations(location);
 	});
 
@@ -139,7 +141,7 @@ function viewModel(){
 				title: place.name()
 			});
 			bounds.extend(myLatLng); // extends map bounds to make markers fit on map
-			place.marker = marker; // makes a marker property for each place
+			place.marker = marker; // makes a marker property for each Location object in self.locationsList()
 			self.markers.push(place.marker); // pushes a marker into the array of markers to be tracked on search
 
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
@@ -187,7 +189,7 @@ function viewModel(){
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
-			var venueLat = self.crawlList()[i].lat(); // takes each added location's latlng to be added into waypoints
+			var venueLat = self.crawlList()[i].lat();
 			var venueLng = self.crawlList()[i].lng();
 			waypoints.push({
 				location: {lat: venueLat, lng: venueLng},
