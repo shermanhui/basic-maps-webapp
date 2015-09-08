@@ -7,7 +7,7 @@ html, body {
 #wrapper {
 	position:relative;
 	float: right;
-	width: 80%;
+	width: 100%;
 }
 
 #map {

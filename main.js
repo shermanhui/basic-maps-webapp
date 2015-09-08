@@ -1,6 +1,5 @@
 // TO DO:
 // Close InfoWindow on search - not working
-// List empties out on search, but markers still persist! :(
 // Allow user to create a "route" for pub crawl - Add ability to set start/end position to avoid duplication in directions panel
 // Style Project
 // Stop route maker from making duplicate routes
@@ -11,11 +10,9 @@ var infoWindow = new google.maps.InfoWindow();
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
 var BAR_ID = '4bf58dd8d48988d116941735';
-var DIVEBAR_ID = '4bf58dd8d48988d118941735'; // currently unused
 var PUB_ID = '4bf58dd8d48988d11b941735';
 var BREWERY_ID = '50327c8591d4c4b30a586d5d';
-
-var locationData = []; //empty array to store data
+var DIVEBAR_ID = '4bf58dd8d48988d118941735'; // currently unused
 
 //make a Location, data to be used for markers and list view
 var Location = function(data){
@@ -26,14 +23,6 @@ var Location = function(data){
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
 	this.marker = ko.observableArray(data.marker);
-	// this.latlng = ko.observable(new google.maps.LatLng(data.lat, data.lng));
-	// this.marker = new google.maps.Marker({
-	// 	position: self.latlng(),
-	// 	map: map,
-	// 	title: self.name()
-	// });
-	// bounds.extend(self.latlng());
-	// map.fitBounds(bounds);
 
 	this.contentString = // create content string for infoWindow
 		'<div id="content">'+
@@ -87,6 +76,7 @@ function viewModel(){
 				'&client_secret=' + CLIENT_SECRET +
 				'&v=20150806&m=foursquare',
 			success: function(fsData){
+				self.clearData();
 				var response = fsData.response.groups[0].items;
 				for (var i = 0; i < response.length; i++) {
 						var venue = response[i].venue;
@@ -100,10 +90,11 @@ function viewModel(){
 							address: venueLoc.address,
 							rating: venueRating
 						};
-					locationData.push(obj);
-					//console.log(locationData);
+					self.locationsList.push(new Location(obj));
+					self.makeMarkers();
 				}
-				self.initialize(); // callback function to populate locationData with FSdata
+				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center
+				map.setZoom(15);
 			},
 			error: function(error){
 				alert('There was a problem retrieving the requested data, please double check your query');
@@ -111,25 +102,17 @@ function viewModel(){
 		});
 	};
 
-	this.clearPreviousLocationData = function(){
-		locationData.length = 0; // set array length to 0 to clear arrays
-		self.crawlList.removeAll(); // clears crawlList from view
-		self.markers.removeAll(); // should remove all markers
-		self.locationsList.removeAll(); // removes all list items and clears listView
+	this.clearData = function(){
+		self.markers().forEach(function(marker){
+			marker.setMap(null);
+		})
+		self.locationsList.removeAll();
 	};
 
 	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
 		var location = self.locInput().toLowerCase();
-		self.clearPreviousLocationData();
 		self.loadLocations(location);
 	});
-
-	this.initialize = function(){ //takes FS data and for each location in locations list, builds a Location object to be pushed into self.locationsList()
-		locationData.forEach(function(place){
-			self.locationsList.push(new Location(place));
-		});
-		self.makeMarkers(); // calls function that makes markers on map
-	};
 
 	this.makeMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
