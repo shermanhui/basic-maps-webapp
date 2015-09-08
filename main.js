@@ -100,9 +100,11 @@ function viewModel(){
 							rating: venueRating
 						};
 					locationData.push(obj);
-					//console.log(locationData);
 				}
 				self.initialize(); // callback function to populate locationData with FSdata
+			},
+			error: function(error){
+				alert('There was an error: ' + error);
 			}
 		});
 	};
@@ -111,7 +113,7 @@ function viewModel(){
 		locationData.length = 0;
 		self.locationsList.removeAll();
 		self.crawlList.removeAll();
-		self.markers.removeAll();
+		self.markers.removeAll(); // this doesn't do anything right now...Intended use is to remove all markers from the map
 	};
 
 	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
@@ -185,7 +187,7 @@ function viewModel(){
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
-			var venueLat = self.crawlList()[i].lat();
+			var venueLat = self.crawlList()[i].lat(); // takes each added location's latlng to be added into waypoints
 			var venueLng = self.crawlList()[i].lng();
 			waypoints.push({
 				location: {lat: venueLat, lng: venueLng},
@@ -195,8 +197,8 @@ function viewModel(){
 		}
 
 		directionsService.route({
-			origin: waypoints[0].location,//{lat: self.crawlList()[0].lat(), lng: self.crawlList()[0].lng()},
-			destination: waypoints[waypoints.length - 1].location,//{lat: self.crawlList()[self.crawlList().length - 1].lat(), lng: self.crawlList()[self.crawlList().length - 1].lng()},
+			origin: waypoints[0].location,// sets origin as first way point, this is causing the directions panel bug
+			destination: waypoints[waypoints.length - 1].location, // set last waypoint as destination, causing duplicate location on directions panel
 			waypoints: waypoints,
 			optimizeWaypoints: false,
 			travelMode: google.maps.TravelMode.WALKING
@@ -230,7 +232,6 @@ function viewModel(){
 		if (!filter){ // if false return the list as normal
 			self.setMarker();
 			infoWindow.close();
-			//console.log(self.locationsList());
 			return self.locationsList();
 		} else {
 			return ko.utils.arrayFilter(self.locationsList(), function(place){
