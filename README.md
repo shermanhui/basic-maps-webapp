@@ -2,10 +2,10 @@
 Simplified Version of P5 (Pub Crawl App)
 
 How to use:
-Open up index.html
-List of bars/breweries in Vancouver, BC open up as default.
-Users can add specific venues to their crawl list
-Users can click "Create Crawl" to generate a directions list to plan their pub crawl!
+- Open up index.html
+- List of bars/breweries in Vancouver, BC open up as default.
+- Users can add specific venues to their crawl list
+- Users can click "Create Crawl" to generate a directions list to plan their pub crawl!
 
 Resources Used:
 
@@ -30,15 +30,15 @@ To-Dos:
 
 - Responsive Design for Mobile
     - Cohesive and enjoyable user experience
-- ~~~Search Bar: filters both list view and markers~~~
-- ~~~List View: filters through searched locations and opens associated marker~~~
-- ~~~"Unique Functionality"~~~
+- ~~Search Bar: filters both list view and markers~~
+- ~~List View: filters through searched locations and opens associated marker~~
+- ~~"Unique Functionality"~~
     - Route making counts...right? 
 - Incorporate Build Process
     - Production quality minified code
 - Data persists when app is opened and closed
     - Firebase/localStorage
-- ~~~Populates dynamic model with info retrieved from API~~~
+- ~~Populates dynamic model with info retrieved from API~~
 - Error handling for API
 - Include third-party API beyond what's required
 - Style marker differently and usefully
