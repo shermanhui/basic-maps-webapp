@@ -1,17 +1,17 @@
 // TO DO:
 // Close InfoWindow on search - not working
-// List must empty out on new Location set up - not working
-// Allow user to create a "route" for pub crawl - semi-working: route creation isn't very smart, it also over keeps creating route if user spams "create route"
+// List empties out on search, but markers still persist! :(
+// Allow user to create a "route" for pub crawl - Add ability to set start/end position to avoid duplication in directions panel
 // Style Project
-// Duplicate markers when route is created
+// Stop route maker from making duplicate routes
 
-var map, marker, bounds;
+var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
 var BAR_ID = '4bf58dd8d48988d116941735';
-var DIVEBAR_ID = '4bf58dd8d48988d118941735';
+var DIVEBAR_ID = '4bf58dd8d48988d118941735'; // currently unused
 var PUB_ID = '4bf58dd8d48988d11b941735';
 var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 
@@ -25,6 +25,14 @@ var Location = function(data){
 	this.lng = ko.observable(data.lng);
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
+	this.marker = ko.observableArray(data.marker);
+	// this.latlng = ko.observable(new google.maps.LatLng(data.lat, data.lng));
+	// this.marker = new google.maps.Marker({
+	// 	position: self.latlng(),
+	// 	map: map,
+	// 	title: self.name()
+	// });
+	// bounds.extend(self.latlng());
 
 	this.contentString = // create content string for infoWindow
 		'<div id="content">'+
@@ -66,11 +74,6 @@ function viewModel(){
 	this.filter = ko.observable(''); 	// the filter for search bar
 	this.locInput = ko.observable('Vancouver, BC');  // user defined location input
 
-	this.clearData = function(){
-		self.markers.removeAll(); // should remove all values and return an empty array
-		self.locationsList.removeAll();
-	};
-
 	this.loadLocations = function(location){ // takes a user defined location; Vancouver, BC to start with
 		$.ajax({
 			url: 'https://api.foursquare.com/v2/venues/explore?',
@@ -84,7 +87,6 @@ function viewModel(){
 				'&v=20150806&m=foursquare',
 			success: function(fsData){
 				var response = fsData.response.groups[0].items;
-				console.log(response);
 				for (var i = 0; i < response.length; i++) {
 						var venue = response[i].venue;
 						var venueName = venue.name;
@@ -103,6 +105,13 @@ function viewModel(){
 				self.initialize(); // callback function to populate locationData with FSdata
 			}
 		});
+	};
+
+	this.clearData = function(){
+		locationData.length = 0;
+		self.locationsList.removeAll();
+		self.crawlList.removeAll();
+		self.markers.removeAll();
 	};
 
 	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
@@ -147,6 +156,7 @@ function viewModel(){
 		for (var i = 0; i < len; i++){
 			if (listItem === self.markers()[i].title){ // If the clicked list item's name matches a relevant marker, then we display the infoWindow
 				map.panTo(self.markers()[i].position); // pans to marker
+				map.setZoom(15);
 				infoWindow.setContent(place.contentString);
 				infoWindow.open(map, self.markers()[i]);
 			}
@@ -170,8 +180,8 @@ function viewModel(){
 	};
 
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
-		var directionsService = new google.maps.DirectionsService;
-		var directionsDisplay = new google.maps.DirectionsRenderer;
+		directionsService = new google.maps.DirectionsService();
+		directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
@@ -181,12 +191,12 @@ function viewModel(){
 				location: {lat: venueLat, lng: venueLng},
 				stopover: true
 			});
-			console.log(waypoints)
+			console.log(waypoints);
 		}
 
 		directionsService.route({
-			origin: waypoints[1]['location'],//{lat: self.crawlList()[0].lat(), lng: self.crawlList()[0].lng()},
-			destination: waypoints[waypoints.length - 1]['location'],//{lat: self.crawlList()[self.crawlList().length - 1].lat(), lng: self.crawlList()[self.crawlList().length - 1].lng()},
+			origin: waypoints[0].location,//{lat: self.crawlList()[0].lat(), lng: self.crawlList()[0].lng()},
+			destination: waypoints[waypoints.length - 1].location,//{lat: self.crawlList()[self.crawlList().length - 1].lat(), lng: self.crawlList()[self.crawlList().length - 1].lng()},
 			waypoints: waypoints,
 			optimizeWaypoints: false,
 			travelMode: google.maps.TravelMode.WALKING
@@ -194,6 +204,7 @@ function viewModel(){
 			if (status === google.maps.DirectionsStatus.OK){
 				directionsDisplay.setDirections(response);
 				var route = response.routes[0];
+				console.log(response);
 			} else {
 				alert('Directions request failed due to ' + status);
 			}
