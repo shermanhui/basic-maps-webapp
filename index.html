@@ -28,7 +28,8 @@
 			<li data-bind='text: $data.name()'>
 			</li>
 		</ol>
-		<button data-bind='click: makeRoute'>Create Route!</button>
+		<button data-bind='click: makeRoute, disable: isLocked'>Create Route!</button>
+		<button data-bind='click: null, disable: isLocked'>Reset</button>
 		<div id="directions-panel" class="panel"></div>
     </div>
 	</div>

@@ -1,8 +1,8 @@
 // TO DO:
 // Close InfoWindow on search - not working
 // Style Project
-// Stop route maker from making duplicate routes
 // Route maker clears markers on search, need a functionality that restores markers
+// Clear Route and reset make route button
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
@@ -61,6 +61,7 @@ function viewModel(){
 	this.markers = ko.observableArray(); // list of markers
 	this.crawlList = ko.observableArray(); // list of user selected venues
 	this.filter = ko.observable(''); 	// the filter for search bar
+	this.isLocked= ko.observable(false);
 	this.locInput = ko.observable('Vancouver, BC');  // user defined location input
 
 	this.loadLocations = function(location){ // takes a user defined location; Vancouver, BC to start with
@@ -208,7 +209,8 @@ function viewModel(){
 			self.calculateAndDisplayRoute(directionsService, directionsDisplay);
 			self.markers().forEach(function(marker){
 				marker.setMap(null);
-			})
+			});
+			self.isLocked(true);
 		} else {
 			alert('You need atleast two locations and are limited to 8')
 		}
