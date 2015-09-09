@@ -7,7 +7,7 @@ html, body {
 #wrapper {
 	position:relative;
 	float: right;
-	width: 100%;
+	width: 80%;
 }
 
 #map {
@@ -50,9 +50,10 @@ html, body {
 	overflow-y: auto;
 }
 
-#route-display ul {
+#route-display li {
 	text-align: center;
 	padding: 0;
+	list-style-type: upper-alpha;
 }
 /* Directions Panel */
 #panel {

@@ -1,8 +1,8 @@
 // TO DO:
 // Close InfoWindow on search - not working
-// Allow user to create a "route" for pub crawl - Add ability to set start/end position to avoid duplication in directions panel
 // Style Project
 // Stop route maker from making duplicate routes
+// Route maker clears markers on search, need a functionality that restores markers
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
@@ -40,8 +40,7 @@ var Location = function(data){
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
 	map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 49.2844, lng: -123.1089},
-		zoom: 15
+		center: {lat: 49.2844, lng: -123.1089}
 	});
 
 	google.maps.event.addDomListener(window, "resize", function() {	// browser resize triggers map resize for responsiveness
@@ -76,25 +75,11 @@ function viewModel(){
 				'&client_secret=' + CLIENT_SECRET +
 				'&v=20150806&m=foursquare',
 			success: function(fsData){
-				self.clearData();
 				var response = fsData.response.groups[0].items;
-				for (var i = 0; i < response.length; i++) {
-						var venue = response[i].venue;
-						var venueName = venue.name;
-						var venueLoc = venue.location;
-						var venueRating = venue.rating;
-						var obj = {
-							name: venueName,
-							lat: venueLoc.lat,
-							lng: venueLoc.lng,
-							address: venueLoc.address,
-							rating: venueRating
-						};
-					self.locationsList.push(new Location(obj));
-					self.makeMarkers();
-				}
+				self.clearData();
+				self.createLocations(response);
 				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center
-				map.setZoom(15);
+				map.setZoom(13);
 			},
 			error: function(error){
 				alert('There was a problem retrieving the requested data, please double check your query');
@@ -113,6 +98,24 @@ function viewModel(){
 		var location = self.locInput().toLowerCase();
 		self.loadLocations(location);
 	});
+
+	this.createLocations = function(response){
+		for (var i = 0; i < response.length; i++) {
+			var venue = response[i].venue;
+			var venueName = venue.name;
+			var venueLoc = venue.location;
+			var venueRating = venue.rating;
+			var obj = {
+				name: venueName,
+				lat: venueLoc.lat,
+				lng: venueLoc.lng,
+				address: venueLoc.address,
+				rating: venueRating
+			};
+			self.locationsList.push(new Location(obj));
+			self.makeMarkers();
+		}
+	};
 
 	this.makeMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
@@ -168,7 +171,7 @@ function viewModel(){
 
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
 		directionsService = new google.maps.DirectionsService();
-		directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+		directionsDisplay = new google.maps.DirectionsRenderer({});
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
@@ -178,13 +181,12 @@ function viewModel(){
 				location: {lat: venueLat, lng: venueLng},
 				stopover: true
 			});
-			console.log(waypoints);
 		}
 
 		directionsService.route({
 			origin: waypoints[0].location,// sets origin as first way point, this is causing the directions panel bug
 			destination: waypoints[waypoints.length - 1].location, // set last waypoint as destination, causing duplicate location on directions panel
-			waypoints: waypoints,
+			waypoints: waypoints.slice(1, waypoints.length -1),
 			optimizeWaypoints: false,
 			travelMode: google.maps.TravelMode.WALKING
 		}, function(response, status){
@@ -202,7 +204,14 @@ function viewModel(){
 	};
 
 	this.makeRoute = function(directionsService, directionsDisplay){
-		self.calculateAndDisplayRoute(directionsService, directionsDisplay);
+		if (self.crawlList().length > 1 && self.crawlList().length < 8){
+			self.calculateAndDisplayRoute(directionsService, directionsDisplay);
+			self.markers().forEach(function(marker){
+				marker.setMap(null);
+			})
+		} else {
+			alert('You need atleast two locations and are limited to 8')
+		}
 	};
 
 	this.setMarker = function(){ // for each marker in the list set it to be visible
