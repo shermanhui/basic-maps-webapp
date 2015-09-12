@@ -6,6 +6,8 @@
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
+//var directionsService = new google.maps.DirectionsService();
+//var directionsDisplay = new google.maps.DirectionsRenderer({});
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -80,19 +82,12 @@ function viewModel(){
 				self.clearData();
 				self.createLocations(response);
 				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center
-				map.setZoom(13);
+				map.setZoom(12);
 			},
 			error: function(error){
 				alert('There was a problem retrieving the requested data, please double check your query');
 			}
 		});
-	};
-
-	this.clearData = function(){
-		self.markers().forEach(function(marker){
-			marker.setMap(null);
-		})
-		self.locationsList.removeAll();
 	};
 
 	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
@@ -116,6 +111,13 @@ function viewModel(){
 			self.locationsList.push(new Location(obj));
 			self.makeMarkers();
 		}
+	};
+
+	this.clearData = function(){ //clears map data on new location search
+		self.markers().forEach(function(marker){
+			marker.setMap(null);
+		})
+		self.locationsList.removeAll();
 	};
 
 	this.makeMarkers = function(){
@@ -147,7 +149,7 @@ function viewModel(){
 		for (var i = 0; i < len; i++){
 			if (listItem === self.markers()[i].title){ // If the clicked list item's name matches a relevant marker, then we display the infoWindow
 				map.panTo(self.markers()[i].position); // pans to marker
-				map.setZoom(15);
+				map.setZoom(14);
 				infoWindow.setContent(place.contentString);
 				infoWindow.open(map, self.markers()[i]);
 			}
@@ -171,8 +173,8 @@ function viewModel(){
 	};
 
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
-		directionsService = new google.maps.DirectionsService();
-		directionsDisplay = new google.maps.DirectionsRenderer({});
+		window.directionsService = new google.maps.DirectionsService();
+		window.directionsDisplay = new google.maps.DirectionsRenderer({});
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
@@ -184,15 +186,16 @@ function viewModel(){
 			});
 		}
 
-		directionsService.route({
+		window.directionsService.route({
 			origin: waypoints[0].location,// sets origin as first way point, this is causing the directions panel bug
 			destination: waypoints[waypoints.length - 1].location, // set last waypoint as destination, causing duplicate location on directions panel
 			waypoints: waypoints.slice(1, waypoints.length -1),
 			optimizeWaypoints: false,
+			//provideRouteAlternatives: true,
 			travelMode: google.maps.TravelMode.WALKING
 		}, function(response, status){
 			if (status === google.maps.DirectionsStatus.OK){
-				directionsDisplay.setDirections(response);
+				window.directionsDisplay.setDirections(response);
 				var route = response.routes[0];
 				console.log(response);
 			} else {
@@ -200,8 +203,8 @@ function viewModel(){
 			}
 		});
 
-		directionsDisplay.setMap(map);
-		directionsDisplay.setPanel(document.getElementById('directions-panel'));
+		window.directionsDisplay.setMap(map);
+		window.directionsDisplay.setPanel(document.getElementById('directions-panel'));
 	};
 
 	this.makeRoute = function(directionsService, directionsDisplay){
@@ -215,6 +218,14 @@ function viewModel(){
 			alert('You need atleast two locations and are limited to 8')
 		}
 	};
+
+	this.emptyRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
+		self.crawlList.removeAll();
+		self.makeMarkers();
+		window.directionsDisplay.setMap(null);
+		window.directionsDisplay.setPanel(null);
+		self.isLocked(false);
+	}
 
 	this.setMarker = function(){ // for each marker in the list set it to be visible
 		for (var i = 0; i < self.markers().length; i++){
