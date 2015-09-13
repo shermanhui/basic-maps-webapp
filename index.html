@@ -5,8 +5,30 @@
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
 </head>
 <body>
+	<section id='hero-landing'>
+		<div class='container-fluid'>
+			<div class='row'>
+				<div class='hero'>
+					<div class='col-md-offset-3 col-md-6 text-center v-align' id='hero-tag'>
+						<h1><span id='hero-phrase'>THIS IS YOUR</span><b id='night-text'> NIGHT</b></h1>
+						<p>YOUR GUIDE TO THE PERFECT PUBCRAWL</p>
+						<button id='hero-btn' class='btn btn-default btn-white' href='#map-app'>Get <b>STARTED</b></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id='about-section'>
+		<div class='container-fluid'>
+			<div id='part-one'>
+				Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+			</div>
+		</div>
+	</section>
+	<section id='map-app'>
 	<div id="wrapper">
 		<input id="global-search" placeholder="City, State" type="search" data-bind="value: locInput" autocomplete="off">
 		<input id="search-bar" placeholder="Filter Locations" type="search" data-bind="textInput: filter" autocomplete="off">
@@ -34,6 +56,7 @@
 		<button data-bind='click: emptyRoute, enable: isLocked'>Reset</button>
 		<div id="directions-panel" class="panel"></div>
     </div>
+    </section>
 	</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>

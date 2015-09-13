@@ -4,6 +4,40 @@ html, body {
 	padding: 0;
 }
 
+.hero {
+	height:100%;
+	width:100%;
+	background:
+	linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('https://secure.static.tumblr.com/b168c185e9e42a276ee5402accba7767/lwugoq8/7Upn2fyy8/tumblr_static_indoors-bottles-bar-drinks-pub-new-hd-wallpaper.jpg');;
+	background-size: cover;
+}
+
+.v-align {
+	top: 50%;
+}
+#hero-btn {
+
+}
+#hero-tag {
+	color: white;
+	display: block;
+	font-family: 'Poiret One', cursive;
+}
+
+#hero-phrase {
+	font-size: 50px;
+	font-weight: lighter;
+}
+
+#night-text {
+	font-size: 55px;
+	font-weight: bolder;
+}
+
 #wrapper {
 	position:relative;
 	float: right;
