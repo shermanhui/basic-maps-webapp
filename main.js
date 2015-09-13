@@ -116,7 +116,7 @@ function viewModel(){
 	this.clearData = function(){ //clears map data on new location search
 		self.markers().forEach(function(marker){
 			marker.setMap(null);
-		})
+		});
 		self.locationsList.removeAll();
 	};
 
@@ -215,7 +215,7 @@ function viewModel(){
 			});
 			self.isLocked(true);
 		} else {
-			alert('You need atleast two locations and are limited to 8')
+			alert('You need atleast two locations and are limited to 8');
 		}
 	};
 
@@ -225,7 +225,7 @@ function viewModel(){
 		window.directionsDisplay.setMap(null);
 		window.directionsDisplay.setPanel(null);
 		self.isLocked(false);
-	}
+	};
 
 	this.setMarker = function(){ // for each marker in the list set it to be visible
 		for (var i = 0; i < self.markers().length; i++){
