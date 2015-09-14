@@ -55,12 +55,13 @@
 		</div>
 	</section>
 	<section data-scroll-index="2" id='map-app'>
-	<div id="wrapper">
+	<div>
 		<div class='col-md-4 input-group input-group-sm pull-right' id='map-inputs'>
 			<input class='form-control' id="global-search" placeholder="City, State" type="search" data-bind="value: locInput" autocomplete="off">
 			<input class='form-control' id="search-bar" placeholder="Filter Locations" type="search" data-bind="textInput: filter" autocomplete="off">
 		</div>
 		<div id='list'>
+			<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
 			<ul data-bind='foreach: searchFilter'>
 				<li>
 					<div>
@@ -72,18 +73,27 @@
 			</ul>
 		</div>
 	</div>
-	<div id='map'></div>
-	<div id="route-display">
-		<h2>Your Crawl Route</h2>
-		<div data-bind="if: crawlList().length == 0">There aren't any locations yet..Add some to begin!</div>
-		<ol data-bind='foreach: crawlList'>
-			<li data-bind='text: $data.name()'>
-			</li>
-		</ol>
-		<button data-bind='click: makeRoute, disable: isLocked'>Create Route!</button>
-		<button data-bind='click: emptyRoute, enable: isLocked'>Reset</button>
-		<div id="directions-panel" class="panel"></div>
-    </div>
+	<div id='wrapper' class='toggled'>
+		<div id='sidebar-wrapper'>
+			<ul class='sidebar-nav'>
+			<div class='poiret-font' id='route-display'>
+				<h2>Your Crawl Route</h2>
+				<div data-bind="if: crawlList().length == 0">There aren't any locations yet..Add some to begin!</div>
+				<ol data-bind='foreach: crawlList'>
+					<li data-bind='text: $data.name()'></li>
+				</ol>
+				<button data-bind='click: makeRoute, disable: isLocked'>Create Route!</button>
+				<button data-bind='click: emptyRoute, enable: isLocked'>Reset</button>
+				<div id="directions-panel" class="panel"></div>
+			</div>
+		</ul>
+		</div>
+		<div id='page-content-wrapper'>
+			<div class='container-fluid' id='map-padding'>
+				<div id='map'></div>
+			</div>
+		</div>
+	</div>
     </section>
 	</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
