@@ -34,6 +34,46 @@ h2.poiret-font {
 	background: transparent;
 }
 
+/* Custon Buttons CSS */
+.btn {
+    padding: 14px 24px;
+    border: 0 none;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.btn.outline {
+    background: none;
+    padding: 12px 22px;
+}
+
+.btn:focus, .btn:active:focus, .btn.active:focus {
+    outline: 0 none;
+}
+
+.btn-primary {
+    background: #0099cc;
+    color: #ffffff;
+}
+
+.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
+    color: #33a6cc;
+    border-color: #33a6cc;
+}
+.btn-primary.outline:active, .btn-primary.outline.active {
+    border-color: #007299;
+    color: #007299;
+    box-shadow: none;
+}
+
+.btn-primary.outline {
+    border: 2px solid #0099cc;
+    color: #0099cc;
+}
+
+/* End Button CSS */
+
 /* NavBar CSS */
 .navbar a {
 	color:white;
@@ -246,7 +286,7 @@ h2.poiret-font {
 /* Sidebar Styles */
 .sidebar-toggle .icon-bar {
 	font-size: 1.5em;
-	color:black;
+	color: black;
 	background: black;
 }
 

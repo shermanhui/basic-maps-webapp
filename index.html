@@ -13,7 +13,6 @@
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
@@ -36,7 +35,7 @@
 					<div class='col-md-offset-3 col-md-6 text-center v-align poiret-font' id='hero-tag'>
 						<h1><span id='hero-phrase'>THIS IS YOUR</span><b id='night-text'> NIGHT</b></h1>
 						<p>YOUR GUIDE TO THE PERFECT PUBCRAWL</p>
-						<button data-scroll-goto="1" id='hero-btn' class='btn btn-default btn-white'>Get <b>STARTED</b></button>
+						<button data-scroll-goto="1" id='hero-btn' class='btn btn-default btn-primary outline'>Get <b>STARTED</b></button>
 					</div>
 				</div>
 			</div>
@@ -61,13 +60,15 @@
 			<input class='form-control' id="search-bar" placeholder="Filter Locations" type="search" data-bind="textInput: filter" autocomplete="off">
 		</div>
 		<div id='list'>
-			<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+			<button href="#menu-toggle" class="btn btn-primary outline sidebar-toggle collapsed" id="menu-toggle">
+				<span>Toggle Crawl List</span>
+			</button>
 			<ul data-bind='foreach: searchFilter'>
 				<li>
 					<div>
 						<p class="venue-name" data-bind='text: name, click: $parent.openFromList'></p>
-						<button class="add" data-bind='click: $parent.addToRoute'>Add</button>
-						<button class="remove" data-bind='click: $parent.removeFromRoute'>Remove</button>
+						<button class="add btn btn-primary outline" data-bind='click: $parent.addToRoute'>Add</button>
+						<button class="remove btn btn-primary outline" data-bind='click: $parent.removeFromRoute'>Remove</button>
 					</div>
 				</li>
 			</ul>
@@ -82,8 +83,8 @@
 				<ol data-bind='foreach: crawlList'>
 					<li data-bind='text: $data.name()'></li>
 				</ol>
-				<button data-bind='click: makeRoute, disable: isLocked'>Create Route!</button>
-				<button data-bind='click: emptyRoute, enable: isLocked'>Reset</button>
+				<button class='btn primary outline' data-bind='click: makeRoute, disable: isLocked'>Create Route!</button>
+				<button class='btn primary outline' data-bind='click: emptyRoute, enable: isLocked'>Reset</button>
 				<div id="directions-panel" class="panel"></div>
 			</div>
 		</ul>
