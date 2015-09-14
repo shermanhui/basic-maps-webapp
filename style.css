@@ -17,15 +17,35 @@ html, body {
 }
 
 .v-align {
-	top: 50%;
+	top: 45%;
 }
-#hero-btn {
 
+.transparent {
+	background: transparent;
 }
-#hero-tag {
-	color: white;
-	display: block;
+
+.poiret-font{
 	font-family: 'Poiret One', cursive;
+	color: white;
+}
+
+.navbar a {
+	color:white;
+}
+
+.navbar-brand:hover {
+	font-weight: bold;
+	color: white;
+}
+
+.navbar-toggle .icon-bar {
+	font-size: 1.5em;
+	color:white;
+	background: white;
+}
+
+#hero-tag {
+	display: block;
 }
 
 #hero-phrase {

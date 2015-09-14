@@ -3,6 +3,10 @@
 // Style Project
 // Route maker clears markers on search, need a functionality that restores markers
 // Clear Route and reset make route button
+// calls scrollit.js
+$(function(){
+  $.scrollIt();
+});
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
