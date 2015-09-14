@@ -1,27 +1,6 @@
 html, body {
-	height: 100%;
 	margin: 0;
 	padding: 0;
-}
-
-.hero {
-	height:100%;
-	width:100%;
-	background:
-	linear-gradient(
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.5)
-    ),
-    url('https://secure.static.tumblr.com/b168c185e9e42a276ee5402accba7767/lwugoq8/7Upn2fyy8/tumblr_static_indoors-bottles-bar-drinks-pub-new-hd-wallpaper.jpg');;
-	background-size: cover;
-}
-
-.v-align {
-	top: 45%;
-}
-
-.transparent {
-	background: transparent;
 }
 
 .poiret-font{
@@ -29,6 +8,33 @@ html, body {
 	color: white;
 }
 
+h2.poiret-font {
+	color:black;
+}
+
+.hero {
+	height:100vh;
+	width:100vw;
+	background:
+	linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('https://secure.static.tumblr.com/b168c185e9e42a276ee5402accba7767/lwugoq8/7Upn2fyy8/tumblr_static_indoors-bottles-bar-drinks-pub-new-hd-wallpaper.jpg');
+	background-size: cover;
+}
+
+.v-align {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.transparent {
+	background: transparent;
+}
+
+/* NavBar CSS */
 .navbar a {
 	color:white;
 }
@@ -43,6 +49,33 @@ html, body {
 	color:white;
 	background: white;
 }
+/* End NavBar CSS */
+
+/* Parallax Effect */
+.parallax {
+	perspective: 1px;
+	height: 100vh;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.parallax__layer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.parallax__layer--base {
+	transform: translateZ(0);
+}
+
+.parallax__layer--back {
+	transform: translateZ(-1px);
+}
+
+/* End Parallax */
 
 #hero-tag {
 	display: block;
@@ -58,16 +91,26 @@ html, body {
 	font-weight: bolder;
 }
 
-#wrapper {
+/*#wrapper {
 	position:relative;
 	float: right;
-	width: 80%;
+	width: 100%;
+}*/
+
+#map-inputs {
+	position: absolute;
+	left: 66%;
 }
 
 #map {
 	position: relative;
 	height: 100%;
-	width:100%;
+	width: 100%;
+}
+
+#about-section {
+	height: 40%;
+	background: rgb(221,221,221);
 }
 /* ListView CSS */
 #list {
@@ -109,7 +152,7 @@ html, body {
 	padding: 0;
 	list-style-type: upper-alpha;
 }
-/* Directions Panel */
+/* Google Maps Directions Panel */
 #panel {
   position: absolute;
   top: 10px;
@@ -151,3 +194,4 @@ html, body {
 	width: 100%;
 	overflow: auto;
 }
+/* END PANEL CSS */

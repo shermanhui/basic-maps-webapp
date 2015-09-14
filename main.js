@@ -5,7 +5,15 @@
 // Clear Route and reset make route button
 // calls scrollit.js
 $(function(){
-  $.scrollIt();
+  $.scrollIt({
+  	upKey: 38,
+  	downKey:40
+  });
+});
+// Toggles Crawl List
+$("#menu-toggle").click(function(e) {
+	e.preventDefault();
+	$("#wrapper").toggleClass("toggled");
 });
 
 var map, marker, bounds, directionsService, directionsDisplay;
@@ -46,8 +54,129 @@ var Location = function(data){
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
 	map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 49.2844, lng: -123.1089}
+		center: {lat: 49.2844, lng: -123.1089},
+		disableDefaultUI: true
 	});
+
+	var styles =[
+		{
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "on"
+				}
+			]
+		},
+		{
+			"elementType": "labels.text.stroke",
+			"stylers": [
+				{
+					"visibility": "off"
+				},
+				{
+					"color": "#ffffff"
+				},
+				{
+					"lightness": 16
+				}
+			]
+		},
+		{
+			"elementType": "labels.text.fill",
+			"stylers": [
+				{
+					"saturation": 36
+				},
+				{
+					"color": "#333333"
+				},
+				{
+					"lightness": 40
+				}
+			]
+		},
+		{
+			"elementType": "geometry",
+			"stylers": [
+				{
+					"visibility": "on"
+				}
+			]
+		},
+		{
+			"featureType": "road",
+			"elementType": "geometry",
+			"stylers": [
+				{
+					"visibility": "on"
+				},
+				{
+					"color": "#000000"
+				},
+				{
+					"weight": 0.2
+				}
+			]
+		},
+		{
+			"featureType": "landscape",
+			"stylers": [
+				{
+					"color": "#ffffff"
+				},
+				{
+					"visibility": "on"
+				}
+			]
+		},
+		{
+			"featureType": "water",
+			"elementType": "geometry",
+			"stylers": [
+				{
+					"color": "#e9e9e9"
+				},
+				{
+					"lightness": 17
+				}
+			]
+		},
+		{
+			"featureType": "poi",
+			"elementType": "geometry",
+			"stylers": [
+				{
+					"color": "#f5f5f5"
+				},
+				{
+					"lightness": 21
+				}
+			]
+		},
+		{
+			"featureType": "poi.park",
+			"elementType": "geometry",
+			"stylers": [
+				{
+					"color": "#dedede"
+				},
+				{
+					"lightness": 21
+				}
+			]
+		},
+		{
+			"featureType": "administrative",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		}
+		];
+
+	var styledMap = new google.maps.StyledMapType(styles,
+    	{name: "Styled Map"});
 
 	google.maps.event.addDomListener(window, "resize", function() {	// browser resize triggers map resize for responsiveness
 		var center = map.getCenter();
@@ -56,9 +185,11 @@ function initMap() {
 	});
 
 	// adds search bars and list view onto map
-	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('global-search'));
-	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('search-bar'));
+	// map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('global-search'));
+	// map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('search-bar'));
 	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
+	map.mapTypes.set('map_style', styledMap);
+	map.setMapTypeId('map_style');
 }
 
 function viewModel(){
@@ -83,10 +214,11 @@ function viewModel(){
 				'&v=20150806&m=foursquare',
 			success: function(fsData){
 				var response = fsData.response.groups[0].items;
-				self.clearData();
+				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
+				self.emptyRoute(directionsDisplay);
 				self.createLocations(response);
-				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center
-				map.setZoom(12);
+				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[12].lng()}); // hacky way of getting map to re-center
+				map.setZoom(13);
 			},
 			error: function(error){
 				alert('There was a problem retrieving the requested data, please double check your query');
@@ -178,7 +310,7 @@ function viewModel(){
 
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
 		window.directionsService = new google.maps.DirectionsService();
-		window.directionsDisplay = new google.maps.DirectionsRenderer({});
+		window.directionsDisplay = new google.maps.DirectionsRenderer({polylineOptions: { strokeColor: '#5cb85c' }});
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
@@ -226,9 +358,11 @@ function viewModel(){
 	this.emptyRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
 		self.crawlList.removeAll();
 		self.makeMarkers();
-		window.directionsDisplay.setMap(null);
-		window.directionsDisplay.setPanel(null);
-		self.isLocked(false);
+		if (directionsDisplay != null){
+			window.directionsDisplay.setMap(null);
+			window.directionsDisplay.setPanel(null);
+			self.isLocked(false);
+		}
 	};
 
 	this.setMarker = function(){ // for each marker in the list set it to be visible
