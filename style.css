@@ -34,13 +34,19 @@ h2.poiret-font {
 	background: transparent;
 }
 
-/* Custon Buttons CSS */
+.gray {
+	border: gray !important;
+	color: gray !important;
+}
+
+/* Custon Buttons CSS to override Bootstrap*/
 .btn {
     padding: 14px 24px;
     border: 0 none;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
+    border-color: white;
 }
 
 .btn.outline {
@@ -49,29 +55,21 @@ h2.poiret-font {
 }
 
 .btn:focus, .btn:active:focus, .btn.active:focus {
-    outline: 0 none;
+    outline: none !important;
+    background: transparent !important;
+    border-color: white;
 }
 
-.btn-primary {
-    background: #0099cc;
-    color: #ffffff;
-}
-
-.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
-    color: #33a6cc;
-    border-color: #33a6cc;
-}
-.btn-primary.outline:active, .btn-primary.outline.active {
-    border-color: #007299;
-    color: #007299;
-    box-shadow: none;
+.btn-primary:hover {
+    font-weight: bold !important;
+    background: transparent !important;
+    border-color: white !important;
 }
 
 .btn-primary.outline {
-    border: 2px solid #0099cc;
-    color: #0099cc;
+    border: 2px solid white;
+    color: white;
 }
-
 /* End Button CSS */
 
 /* NavBar CSS */
@@ -168,6 +166,13 @@ h2.poiret-font {
 
 .venue-name:hover{
 	font-weight: bold;
+}
+
+#menu-toggle {
+	background: rgba(255,255,255,0.8) !important;
+	border-width: 0.2em;
+	border-style: solid !important;
+	border-color: black !important;
 }
 /* ListView CSS END */
 
@@ -284,12 +289,6 @@ h2.poiret-font {
 }
 
 /* Sidebar Styles */
-.sidebar-toggle .icon-bar {
-	font-size: 1.5em;
-	color: black;
-	background: black;
-}
-
 .sidebar-nav {
     position: absolute;
     top: 0;
