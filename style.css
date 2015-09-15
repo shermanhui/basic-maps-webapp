@@ -26,6 +26,7 @@ h2.poiret-font {
     ),
     url('https://secure.static.tumblr.com/b168c185e9e42a276ee5402accba7767/lwugoq8/7Upn2fyy8/tumblr_static_indoors-bottles-bar-drinks-pub-new-hd-wallpaper.jpg');
 	background-size: cover;
+	overflow: hidden;
 }
 
 .v-align {
