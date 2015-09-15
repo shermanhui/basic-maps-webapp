@@ -3,6 +3,10 @@ html, body {
 	padding: 0;
 }
 
+.text-spacing{
+	letter-spacing: 0.8em;
+}
+
 .poiret-font{
 	font-family: 'Poiret One', cursive;
 	color: white;
@@ -275,7 +279,6 @@ h2.poiret-font {
 #page-content-wrapper {
     width: 100%;
     position: absolute;
-    padding: 15px;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -283,6 +286,7 @@ h2.poiret-font {
     margin-right: -250px;
 }
 
+/* overrides container-fluid padding*/
 #map-padding {
 	padding-left: 0px !important;
 	padding-right: 0px !important;
@@ -336,29 +340,33 @@ h2.poiret-font {
 }
 
 @media(min-width:768px) {
+	#map {
+		position: relative;
+		height: 100vh;
+		width: 100vw;
+	}
     #wrapper {
-        padding-left: 250px;
-    }
-
-    #wrapper.toggled {
         padding-left: 0;
     }
 
-    #sidebar-wrapper {
-        width: 250px;
+    #wrapper.toggled {
+        padding-left: 250px;
     }
 
-    #wrapper.toggled #sidebar-wrapper {
+    #sidebar-wrapper {
         width: 0;
     }
 
+    #wrapper.toggled #sidebar-wrapper {
+        width: 250px;
+    }
+
     #page-content-wrapper {
-        padding: 0px;
         position: relative;
     }
 
     #wrapper.toggled #page-content-wrapper {
         position: relative;
-        margin-right: 0;
+        margin-right: -250px;
     }
 }

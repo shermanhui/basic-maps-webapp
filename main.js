@@ -1,8 +1,7 @@
 // TO DO:
 // Close InfoWindow on search - not working
 // Style Project
-// Route maker clears markers on search, need a functionality that restores markers
-// Clear Route and reset make route button
+
 // calls scrollit.js
 $(function(){
   $.scrollIt({
@@ -10,6 +9,7 @@ $(function(){
   	downKey:40
   });
 });
+
 // Toggles Crawl List
 $("#menu-toggle").click(function(e) {
 	e.preventDefault();
@@ -184,9 +184,8 @@ function initMap() {
 		map.setCenter(center);
 	});
 
-	// adds search bars and list view onto map
-	// map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('global-search'));
-	// map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('search-bar'));
+	// adds search bars and list view onto map, sets styled map
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('menu-toggle'));
 	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
 	map.mapTypes.set('map_style', styledMap);
 	map.setMapTypeId('map_style');
@@ -269,8 +268,17 @@ function viewModel(){
 			place.marker = marker; // makes a marker property for each Location object in self.locationsList()
 			self.markers.push(place.marker); // pushes a marker into the array of markers to be tracked on search
 
+				google.maps.event.addListener(marker, 'click', function() {
+		var self = this;
+		self.setAnimation(google.maps.Animation.BOUNCE);
+		setTimeout(function(){self.setAnimation(null); }, 750);
+	});
+
+
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
 				return function() {
+					// place.marker.setAnimation(google.maps.Animation.BOUNCE);
+					// setTimeout(function(){place.marker.setAnimation(null); }, 1400);
 					infoWindow.setContent(place.contentString);
 					infoWindow.open(map, marker);
 				};
@@ -284,10 +292,11 @@ function viewModel(){
 		var len = self.markers().length;
 		for (var i = 0; i < len; i++){
 			if (listItem === self.markers()[i].title){ // If the clicked list item's name matches a relevant marker, then we display the infoWindow
-				map.panTo(self.markers()[i].position); // pans to marker
+				var currentMarker = self.markers()[i];
+				map.panTo(currentMarker.position); // pans to marker
 				map.setZoom(14);
 				infoWindow.setContent(place.contentString);
-				infoWindow.open(map, self.markers()[i]);
+				infoWindow.open(map, currentMarker);
 			}
 		}
 	};

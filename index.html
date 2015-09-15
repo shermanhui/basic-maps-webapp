@@ -9,7 +9,7 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-transparent navbar-fixed-top">
+<!-- 		<nav class="navbar navbar-transparent navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -26,7 +26,7 @@
 					</ul>
 				</div>
 			</div>
-		</nav>
+		</nav> -->
 	</header>
 	<section data-scroll-index="0" id='hero-landing'>
 		<div class='container-fluid'>
@@ -34,7 +34,7 @@
 				<div class='hero'>
 					<div class='col-md-offset-3 col-md-6 text-center v-align poiret-font' id='hero-tag'>
 						<h1><span id='hero-phrase'>THIS IS YOUR</span><b id='night-text'> NIGHT</b></h1>
-						<p>YOUR GUIDE TO THE PERFECT PUBCRAWL</p>
+						<p class='text-spacing'>YOUR GUIDE TO THE PERFECT PUBCRAWL</p>
 						<button data-scroll-goto="1" id='hero-btn' class='btn btn-primary outline'>Get <b>STARTED</b></button>
 					</div>
 				</div>
@@ -60,9 +60,6 @@
 			<input class='form-control' id="search-bar" placeholder="Filter Locations" type="search" data-bind="textInput: filter" autocomplete="off">
 		</div>
 		<div id='list'>
-			<button href="#menu-toggle" class="center-block btn btn-primary outline collapsed gray" id="menu-toggle">
-				<span>Toggle Crawl List</span>
-			</button>
 			<ul data-bind='foreach: searchFilter'>
 				<li>
 					<div>
@@ -74,7 +71,7 @@
 			</ul>
 		</div>
 	</div>
-	<div id='wrapper' class='toggled'>
+	<div id='wrapper'>
 		<div id='sidebar-wrapper'>
 			<ul class='sidebar-nav'>
 			<div class='poiret-font' id='route-display'>
@@ -93,6 +90,9 @@
 			<div class='container-fluid' id='map-padding'>
 				<div id='map'></div>
 			</div>
+			<button href="#menu-toggle" class="center-block btn btn-primary outline collapsed gray" id="menu-toggle">
+					<span>Toggle Crawl List</span>
+			</button>
 		</div>
 	</div>
     </section>
