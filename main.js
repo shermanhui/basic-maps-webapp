@@ -2,13 +2,52 @@
 // Close InfoWindow on search - not working
 // Style Project
 
-// calls scrollit.js
-$(function(){
-  $.scrollIt({
-  	upKey: 38,
-  	downKey:40
-  });
+// calls panelSnap.js and sets up snap functions
+var options = {
+	$menu: false,
+	menuSelector: 'a',
+	panelSelector: '> section',
+	namespace: '.panelSnap',
+	onSnapStart: function(){},
+	onSnapFinish: function(){},
+	onActivate: function(){},
+	directionThreshold: 5,
+	slideSpeed: 300,
+	delay: 0,
+	easing: 'linear',
+	offset: 0,
+	navigation: {
+		keys: {
+			nextKey: 40,
+			prevKey: 38,
+		},
+		buttons: {
+			$nextButton: false,
+			$prevButton: false,
+		},
+		wrapAround: false
+	}
+};
+
+$('body').panelSnap(options);
+
+$('#hero-btn').on('click', function() {
+      $('body').panelSnap('snapTo', 'next');
 });
+
+$('#global-search-about').keypress(function(event) {
+	if (event.keyCode == 13){
+		$('body').panelSnap('snapTo', 'next');
+	}
+});
+
+// calls scrollit.js
+// $(function(){
+//   $.scrollIt({
+//   	upKey: 38,
+//   	downKey:40
+//   });
+// });
 
 // Toggles Crawl List
 $("#menu-toggle").click(function(e) {

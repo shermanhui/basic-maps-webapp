@@ -12,10 +12,6 @@ html, body {
 	color: white;
 }
 
-h2.poiret-font {
-	color:black;
-}
-
 .hero {
 	height:100vh;
 	width:100vw;
@@ -24,7 +20,7 @@ h2.poiret-font {
       rgba(0, 0, 0, 0.5),
       rgba(0, 0, 0, 0.5)
     ),
-    url('https://secure.static.tumblr.com/b168c185e9e42a276ee5402accba7767/lwugoq8/7Upn2fyy8/tumblr_static_indoors-bottles-bar-drinks-pub-new-hd-wallpaper.jpg');
+    url('http://i.imgur.com/hbS4uc6.jpg');
 	background-size: cover;
 	overflow: hidden;
 }
@@ -146,8 +142,15 @@ h2.poiret-font {
 }
 
 #about-section {
-	height: 40%;
-	background: rgb(221,221,221);
+	height: 100vh;
+	width: 100vw;
+	background:
+	linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('http://i.imgur.com/PGMbOVJ.jpg');
+	background-size: cover;
 }
 /* ListView CSS */
 #list {
