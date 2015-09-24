@@ -307,19 +307,22 @@ function viewModel(){
 			place.marker = marker; // makes a marker property for each Location object in self.locationsList()
 			self.markers.push(place.marker); // pushes a marker into the array of markers to be tracked on search
 
-				google.maps.event.addListener(marker, 'click', function() {
-		var self = this;
-		self.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){self.setAnimation(null); }, 750);
-	});
+			// google.maps.event.addListener(marker, 'click', function() {
+			// 	var self = this;
+			// 	self.setAnimation(google.maps.Animation.BOUNCE);
+			// 	setTimeout(function(){self.setAnimation(null); }, 750);
+			// });
 
 
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
 				return function() {
+					var self = this;
 					// place.marker.setAnimation(google.maps.Animation.BOUNCE);
 					// setTimeout(function(){place.marker.setAnimation(null); }, 1400);
 					infoWindow.setContent(place.contentString);
 					infoWindow.open(map, marker);
+					self.setAnimation(google.maps.Animation.BOUNCE);
+					setTimeout(function(){self.setAnimation(null); }, 750);
 				};
 			})(marker, place));
 			map.fitBounds(bounds);
