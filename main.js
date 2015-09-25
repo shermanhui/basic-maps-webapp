@@ -41,14 +41,6 @@ $('#global-search-about').keypress(function(event) {
 	}
 });
 
-// calls scrollit.js
-// $(function(){
-//   $.scrollIt({
-//   	upKey: 38,
-//   	downKey:40
-//   });
-// });
-
 // Toggles Crawl List
 $("#menu-toggle").click(function(e) {
 	e.preventDefault();
@@ -253,9 +245,9 @@ function viewModel(){
 			success: function(fsData){
 				var response = fsData.response.groups[0].items;
 				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
-				self.emptyRoute(directionsDisplay);
-				self.createLocations(response);
-				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[12].lng()}); // hacky way of getting map to re-center
+				self.emptyRoute(directionsDisplay); // empties out any previously created route in crawl List
+				self.createLocations(response); // creates new list of locations to populate map
+				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[12].lng()}); // hacky way of getting map to re-center on new search
 				map.setZoom(13);
 			},
 			error: function(error){
@@ -264,7 +256,7 @@ function viewModel(){
 		});
 	};
 
-	this.searchLocations = ko.computed(function(){ // not sure if i'm using this right.."undefined is logged"
+	this.searchLocations = ko.computed(function(){ //loads user defined location; default is Vancouver
 		var location = self.locInput().toLowerCase();
 		self.loadLocations(location);
 	});
@@ -283,8 +275,8 @@ function viewModel(){
 				rating: venueRating
 			};
 			self.locationsList.push(new Location(obj));
-			self.makeMarkers();
 		}
+		self.makeMarkers();
 	};
 
 	this.clearData = function(){ //clears map data on new location search
@@ -305,20 +297,12 @@ function viewModel(){
 			});
 			bounds.extend(myLatLng); // extends map bounds to make markers fit on map
 			place.marker = marker; // makes a marker property for each Location object in self.locationsList()
-			self.markers.push(place.marker); // pushes a marker into the array of markers to be tracked on search
-
-			// google.maps.event.addListener(marker, 'click', function() {
-			// 	var self = this;
-			// 	self.setAnimation(google.maps.Animation.BOUNCE);
-			// 	setTimeout(function(){self.setAnimation(null); }, 750);
-			// });
-
+			self.markers.push(marker); // pushes a marker into the array of markers to be tracked on search
+			console.log(self.markers());
 
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
 				return function() {
 					var self = this;
-					// place.marker.setAnimation(google.maps.Animation.BOUNCE);
-					// setTimeout(function(){place.marker.setAnimation(null); }, 1400);
 					infoWindow.setContent(place.contentString);
 					infoWindow.open(map, marker);
 					self.setAnimation(google.maps.Animation.BOUNCE);
@@ -341,6 +325,7 @@ function viewModel(){
 				infoWindow.open(map, currentMarker);
 			}
 		}
+		console.log(self.markers())
 	};
 
 	this.addToRoute = function(place){ // takes in a location object and adds it to crawlList so user can create a route
