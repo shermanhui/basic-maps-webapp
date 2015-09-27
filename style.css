@@ -269,6 +269,7 @@ html, body {
 
 #wrapper.toggled #page-content-wrapper {
     position: absolute;
+    width: 100vw;
     margin-right: -250px;
 }
 

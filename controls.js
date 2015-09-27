@@ -19,7 +19,7 @@ var options = {
 	onSnapStart: function(){},
 	onSnapFinish: function(){},
 	onActivate: function(){},
-	directionThreshold: 5,
+	directionThreshold: 1000,
 	slideSpeed: 300,
 	delay: 0,
 	easing: 'linear',

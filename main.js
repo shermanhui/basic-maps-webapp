@@ -1,7 +1,8 @@
 // TO DO:
+// Menu Option?
 // Close InfoWindow on search - not working
 // Toggle CrawlList doesn't work nice on mobile devices
-// Style Project
+// font in list view is hard to see on mobile device
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
