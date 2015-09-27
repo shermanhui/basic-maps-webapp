@@ -21,6 +21,7 @@ html, body {
       rgba(0, 0, 0, 0.5)
     ),
     url('http://i.imgur.com/hbS4uc6.jpg');
+    background-position: center;
 	background-size: cover;
 	overflow: hidden;
 }
@@ -124,6 +125,7 @@ html, body {
       rgba(0, 0, 0, 0.5)
     ),
     url('http://i.imgur.com/PGMbOVJ.jpg');
+    background-position: center;
 	background-size: cover;
 }
 
@@ -261,7 +263,7 @@ html, body {
 }
 
 #page-content-wrapper {
-    width: 100%;
+    width: 100vw;
     position: absolute;
 }
 
@@ -350,7 +352,7 @@ html, body {
     }
 
     #wrapper.toggled #page-content-wrapper {
-        position: relative;
+        position: absolute;
         margin-right: -250px;
     }
 }

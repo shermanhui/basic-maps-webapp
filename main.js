@@ -1,7 +1,6 @@
 // TO DO:
 // Close InfoWindow on search - not working
 // Toggle CrawlList doesn't work nice on mobile devices
-// Background image doesn't center on mobile devices
 // Style Project
 
 var map, marker, bounds, directionsService, directionsDisplay;
