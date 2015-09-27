@@ -1,18 +1,8 @@
 // TO DO:
 // Close InfoWindow on search - not working
+// Toggle CrawlList doesn't work nice on mobile devices
+// Background image doesn't center on mobile devices
 // Style Project
-
-// Toggles Crawl List
-$("#menu-toggle").click(function(e) {
-	e.preventDefault();
-	$("#wrapper").toggleClass("toggled");
-});
-
-$("#locations-toggle").click(function(e){
-	e.preventDefault();
-	console.log("im working")
-	$("#list").toggle();
-});
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
