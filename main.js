@@ -2,49 +2,16 @@
 // Close InfoWindow on search - not working
 // Style Project
 
-// calls panelSnap.js and sets up snap functions
-var options = {
-	$menu: false,
-	menuSelector: 'a',
-	panelSelector: '> section',
-	namespace: '.panelSnap',
-	onSnapStart: function(){},
-	onSnapFinish: function(){},
-	onActivate: function(){},
-	directionThreshold: 5,
-	slideSpeed: 300,
-	delay: 0,
-	easing: 'linear',
-	offset: 0,
-	navigation: {
-		keys: {
-			nextKey: 40,
-			prevKey: 38,
-		},
-		buttons: {
-			$nextButton: false,
-			$prevButton: false,
-		},
-		wrapAround: false
-	}
-};
-
-$('body').panelSnap(options);
-
-$('#hero-btn').on('click', function() {
-      $('body').panelSnap('snapTo', 'next');
-});
-
-$('#global-search-about').keypress(function(event) {
-	if (event.keyCode == 13){
-		$('body').panelSnap('snapTo', 'next');
-	}
-});
-
 // Toggles Crawl List
 $("#menu-toggle").click(function(e) {
 	e.preventDefault();
 	$("#wrapper").toggleClass("toggled");
+});
+
+$("#locations-toggle").click(function(e){
+	e.preventDefault();
+	console.log("im working")
+	$("#list").toggle();
 });
 
 var map, marker, bounds, directionsService, directionsDisplay;
@@ -216,8 +183,8 @@ function initMap() {
 	});
 
 	// adds search bars and list view onto map, sets styled map
-	map.controls[google.maps.ControlPosition.TOP_LEFT].push(document.getElementById('menu-toggle'));
-	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
+	map.controls[google.maps.ControlPosition.LEFT_TOP].push(document.getElementById('map-buttons'));
+	//map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
 	map.mapTypes.set('map_style', styledMap);
 	map.setMapTypeId('map_style');
 }
@@ -306,7 +273,7 @@ function viewModel(){
 					infoWindow.setContent(place.contentString);
 					infoWindow.open(map, marker);
 					self.setAnimation(google.maps.Animation.BOUNCE);
-					setTimeout(function(){self.setAnimation(null); }, 750);
+					setTimeout(function(){self.setAnimation(null);}, 750);
 				};
 			})(marker, place));
 			map.fitBounds(bounds);
@@ -323,6 +290,8 @@ function viewModel(){
 				map.setZoom(14);
 				infoWindow.setContent(place.contentString);
 				infoWindow.open(map, currentMarker);
+				currentMarker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function(){currentMarker.setAnimation(null);}, 750);
 			}
 		}
 		console.log(self.markers())

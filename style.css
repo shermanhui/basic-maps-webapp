@@ -40,7 +40,7 @@ html, body {
 	color: gray !important;
 }
 
-/* Custon Buttons CSS to override Bootstrap*/
+/* Custom Buttons CSS to override Bootstrap*/
 .btn {
     padding: 14px 24px;
     border: 0 none;
@@ -90,32 +90,6 @@ html, body {
 }
 /* End NavBar CSS */
 
-/* Parallax Effect */
-.parallax {
-	perspective: 1px;
-	height: 100vh;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-.parallax__layer {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-}
-
-.parallax__layer--base {
-	transform: translateZ(0);
-}
-
-.parallax__layer--back {
-	transform: translateZ(-1px);
-}
-
-/* End Parallax */
-
 #hero-tag {
 	display: block;
 }
@@ -152,19 +126,24 @@ html, body {
     url('http://i.imgur.com/PGMbOVJ.jpg');
 	background-size: cover;
 }
+
 /* ListView CSS */
 #list {
+	z-index: 9999;
 	position: absolute;
+	top: 25%;
+	left: 75%;
 	height: 50%;
 	width: 25%;
 	overflow-y: auto;
 	font-size: 1.5em;
+	padding: 0;
 }
 
 #list li {
 	list-style-type: none;
 	background:rgba(255,255,255,0.8);
-	padding: 40px 0;
+	padding: 10px 0;
 	margin: 10px 10px auto;
 	text-align: center;
 	border-style: solid;
@@ -176,7 +155,7 @@ html, body {
 	font-weight: bold;
 }
 
-#menu-toggle {
+#menu-toggle, #locations-toggle {
 	background: rgba(255,255,255,0.8) !important;
 	border-width: 0.2em;
 	border-style: solid !important;
@@ -232,6 +211,7 @@ html, body {
 #panel i, .panel i {
   font-size: 12px;
 }
+
 #directions-panel {
 	height: 100%;
 	float: right;
