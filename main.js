@@ -1,13 +1,12 @@
 // TO DO:
 // Menu Option?
 // Close InfoWindow on search - not working
+// List view and Search Bars are being hidden when crawl list is opened
 // Toggle CrawlList doesn't work nice on mobile devices
 // font in list view is hard to see on mobile device
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
-//var directionsService = new google.maps.DirectionsService();
-//var directionsDisplay = new google.maps.DirectionsRenderer({});
 
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
@@ -34,6 +33,8 @@ var Location = function(data){
 		'<div id="bodyContent">'+
 		'<p><b>Address and Rating</b></p>'+
 		'<p>'+ self.address() + ', Rating: '+ self.rating() + '</p>' +
+		'<button class="add btn btn-primary outline gray" data-bind="click: $parent.addToRoute">Add</button>' +
+		'<button class="remove btn btn-primary outline gray" data-bind="click: $parent.removeFromRoute">Remove</button>' +
 		'</div>'+
 		'</div>';
 };
@@ -174,7 +175,9 @@ function initMap() {
 
 	// adds search bars and list view onto map, sets styled map
 	map.controls[google.maps.ControlPosition.LEFT_TOP].push(document.getElementById('map-buttons'));
-	//map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
+	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(document.getElementById('map-inputs'));
+	map.controls[google.maps.ControlPosition.LEFT_CENTER].push(document.getElementById('directions-container'));
+	map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(document.getElementById('list'));
 	map.mapTypes.set('map_style', styledMap);
 	map.setMapTypeId('map_style');
 }
@@ -255,7 +258,6 @@ function viewModel(){
 			bounds.extend(myLatLng); // extends map bounds to make markers fit on map
 			place.marker = marker; // makes a marker property for each Location object in self.locationsList()
 			self.markers.push(marker); // pushes a marker into the array of markers to be tracked on search
-			console.log(self.markers());
 
 			google.maps.event.addListener(marker, 'click', (function(marker, place) {
 				return function() {
@@ -284,7 +286,6 @@ function viewModel(){
 				setTimeout(function(){currentMarker.setAnimation(null);}, 750);
 			}
 		}
-		console.log(self.markers())
 	};
 
 	this.addToRoute = function(place){ // takes in a location object and adds it to crawlList so user can create a route
