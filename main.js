@@ -1,9 +1,9 @@
 // TO DO:
 // Menu Option?
 // Close InfoWindow on search - not working
-// List view and Search Bars are being hidden when crawl list is opened
 // Toggle CrawlList doesn't work nice on mobile devices
 // font in list view is hard to see on mobile device
+// Crawl List and List View Hidden On Default in mobile devices
 
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
@@ -26,7 +26,7 @@ var Location = function(data){
 	this.marker = ko.observableArray(data.marker);
 
 	this.contentString = // create content string for infoWindow
-		'<div id="content">'+
+		'<div class="text-center" id="content">'+
 		'<div id="siteNotice">'+
 		'</div>'+
 		'<h1 id="firstHeading" class="firstHeading">'+ self.name() +'</h1>'+

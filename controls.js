@@ -6,11 +6,9 @@ $("#menu-toggle").click(function(e) {
 
 $("#locations-toggle").click(function(e){
 	e.preventDefault();
-	console.log("im working")
+	console.log("im working");
 	$("#list").toggle();
 });
-
-
 // calls panelSnap.js and sets up snap functions
 var options = {
 	$menu: false,

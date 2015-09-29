@@ -56,7 +56,8 @@
 	 <!-- Map Section -->
 	<section data-scroll-index="2" id='map-app'>
 		<div class='container-fluid' id='map-padding'>
-			<div class='col-md-4 input-group input-group-sm pull-right' id='map-inputs'>
+			<div id='map'></div>
+			<div class='input-group input-group-sm pull-right' id='map-inputs'>
 				<input class='form-control' id="global-search" placeholder="City, State" type="search" data-bind="value: locInput" autocomplete="off">
 				<input class='form-control' id="search-bar" placeholder="Filter Locations" type="search" data-bind="textInput: filter" autocomplete="off">
 			</div>
@@ -71,7 +72,6 @@
 					</li>
 				</ul>
 			</div>
-			<div id='map'></div>
 			<div class='btn-group-vertical' id='map-buttons'>
 				<button type='button' class="center-block btn btn-primary outline collapsed gray" id="menu-toggle">
 					<span>Toggle Crawl List</span>

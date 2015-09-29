@@ -69,7 +69,6 @@ html, body {
 }
 
 .btn-primary.outline {
-    border: white;
     background: transparent;
 }
 /* End Button CSS */
