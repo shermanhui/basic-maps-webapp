@@ -1,7 +1,6 @@
 // TO DO:
 // Menu Option?
 // Close InfoWindow on search - not working
-// Toggle CrawlList doesn't work nice on mobile devices
 // font in list view is hard to see on mobile device
 // Crawl List and List View Hidden On Default in mobile devices
 
@@ -11,9 +10,7 @@ var infoWindow = new google.maps.InfoWindow();
 var CLIENT_ID = 'Q0A4REVEI2V22KG4IS14LYKMMSRQTVSC2R54Y3DQSMN1ZRHZ';
 var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
 var BAR_ID = '4bf58dd8d48988d116941735';
-var PUB_ID = '4bf58dd8d48988d11b941735';
 var BREWERY_ID = '50327c8591d4c4b30a586d5d';
-var DIVEBAR_ID = '4bf58dd8d48988d118941735'; // currently unused
 
 //make a Location, data to be used for markers and list view
 var Location = function(data){
@@ -24,6 +21,8 @@ var Location = function(data){
 	this.address = ko.observable(data.address);
 	this.rating = ko.observable(data.rating);
 	this.marker = ko.observableArray(data.marker);
+	this.category = ko.observable(data.category);
+	this.icon = ko.observable(data.icon);
 
 	this.contentString = // create content string for infoWindow
 		'<div class="text-center" id="content">'+
@@ -32,7 +31,7 @@ var Location = function(data){
 		'<h1 id="firstHeading" class="firstHeading">'+ self.name() +'</h1>'+
 		'<div id="bodyContent">'+
 		'<p><b>Address and Rating</b></p>'+
-		'<p>'+ self.address() + ', Rating: '+ self.rating() + '</p>' +
+		'<p>'+ self.address() + ', FourSquare Rating: '+ self.rating() + '</p>' +
 		'<button class="add btn btn-primary outline gray" data-bind="click: $parent.addToRoute">Add</button>' +
 		'<button class="remove btn btn-primary outline gray" data-bind="click: $parent.removeFromRoute">Remove</button>' +
 		'</div>'+
@@ -197,17 +196,17 @@ function viewModel(){
 			dataType: 'json',
 			data: 'limit=30&near=' + location +
 				'&categoryId=' + BAR_ID +
-				',' + PUB_ID +
 				',' + BREWERY_ID +
 				'&client_id=' + CLIENT_ID +
 				'&client_secret=' + CLIENT_SECRET +
 				'&v=20150806&m=foursquare',
 			success: function(fsData){
+				console.log(fsData);
 				var response = fsData.response.groups[0].items;
 				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
 				self.emptyRoute(directionsDisplay); // empties out any previously created route in crawl List
 				self.createLocations(response); // creates new list of locations to populate map
-				map.setCenter({lat: self.locationsList()[15].lat(), lng: self.locationsList()[12].lng()}); // hacky way of getting map to re-center on new search
+				map.setCenter({lat: self.locationsList()[5].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center on new search
 				map.setZoom(13);
 			},
 			error: function(error){
@@ -227,16 +226,21 @@ function viewModel(){
 			var venueName = venue.name;
 			var venueLoc = venue.location;
 			var venueRating = venue.rating;
+			var venueCategory = venue.categories[0].id;
+			var venueIcon = venue.categories[0].icon['prefix'] + 'bg_32' + venue.categories[0].icon['suffix'];
 			var obj = {
 				name: venueName,
 				lat: venueLoc.lat,
 				lng: venueLoc.lng,
 				address: venueLoc.address,
-				rating: venueRating
+				rating: venueRating,
+				category: venueCategory,
+				icon: venueIcon
 			};
 			self.locationsList.push(new Location(obj));
 		}
 		self.makeMarkers();
+		console.log(self.locationsList()[1].category(), self.locationsList()[1].name());
 	};
 
 	this.clearData = function(){ //clears map data on new location search
@@ -253,7 +257,8 @@ function viewModel(){
 			marker = new google.maps.Marker({
 				position: myLatLng,
 				map: map,
-				title: place.name()
+				title: place.name(),
+				icon: place.icon()
 			});
 			bounds.extend(myLatLng); // extends map bounds to make markers fit on map
 			place.marker = marker; // makes a marker property for each Location object in self.locationsList()
