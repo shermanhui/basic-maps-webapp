@@ -1,25 +1,25 @@
 // Toggles Crawl List
 $("#menu-toggle").click(function(e) {
-	e.preventDefault();
-	$("#wrapper").toggleClass("toggled");
+    e.preventDefault();
+	$("#directions-container").toggle();
 });
 
 $("#locations-toggle").click(function(e){
 	e.preventDefault();
-	console.log("im working")
+	console.log("im working");
 	$("#list").toggle();
 });
 
 // calls panelSnap.js and sets up snap functions
 var options = {
-	$menu: false,
+  $menu: false,
 	menuSelector: 'a',
 	panelSelector: '> section',
 	namespace: '.panelSnap',
 	onSnapStart: function(){},
 	onSnapFinish: function(){},
 	onActivate: function(){},
-	directionThreshold: 5,
+	directionThreshold: 1000,
 	slideSpeed: 300,
 	delay: 0,
 	easing: 'linear',

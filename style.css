@@ -37,7 +37,6 @@ html, body {
 }
 
 .gray {
-	border: gray !important;
 	color: gray !important;
 }
 
@@ -52,7 +51,8 @@ html, body {
 }
 
 .btn.outline {
-    background: none;
+    border: 0 none;
+    background: transparent;
     padding: 12px 22px;
 }
 
@@ -63,34 +63,19 @@ html, body {
 }
 
 .btn-primary:hover {
-    font-weight: bold !important;
+    font-weight: bolder !important;
     background: transparent !important;
     border-color: white !important;
 }
 
 .btn-primary.outline {
-    border: 2px solid white;
-    color: white;
+    background: transparent;
 }
 /* End Button CSS */
 
-/* NavBar CSS */
-.navbar a {
-	color:white;
+#instructions p{
+    font-size: 1.2em;
 }
-
-.navbar-brand:hover {
-	font-weight: bold;
-	color: white;
-}
-
-.navbar-toggle .icon-bar {
-	font-size: 1.5em;
-	color:white;
-	background: white;
-}
-/* End NavBar CSS */
-
 #hero-tag {
 	display: block;
 }
@@ -106,8 +91,7 @@ html, body {
 }
 
 #map-inputs {
-	position: absolute;
-	left: 66%;
+    margin: 10px 10px auto;
 }
 
 #map {
@@ -131,7 +115,6 @@ html, body {
 
 /* ListView CSS */
 #list {
-	z-index: 9999;
 	position: absolute;
 	top: 25%;
 	left: 75%;
@@ -156,35 +139,45 @@ html, body {
 .venue-name:hover{
 	font-weight: bold;
 }
-
-#menu-toggle, #locations-toggle {
-	background: rgba(255,255,255,0.8) !important;
-	border-width: 0.2em;
-	border-style: solid !important;
-	border-color: black !important;
-}
 /* ListView CSS END */
 
-/* Crawl Route CSS */
-#route-display {
-	position: relative;
-	height: 100%;
-	text-align: center;
-	overflow-y: auto;
+/* Toggle Buttons CSS */
+#menu-toggle, #locations-toggle {
+    background: rgba(255,255,255,0.8) !important;
+    border-width: 0.2em;
+    border-style: solid !important;
+    border-color: black !important;
+    margin: 10px 10px auto;
+}
+/* Toggle Button CSS END */
+
+/* Directions Container CSS */
+#directions-container {
+    background: rgba(255,255,255,0.8) !important;
+    height: 50%;
+    width: 25%;
+    font-size: 1.2em;
+    text-align: center;
+    margin: 10px 10px auto;
+    border-style: solid;
+    border-width: 0.2em;
+    border-color: black;
+    overflow: auto;
 }
 
-#route-display li {
-	text-align: center;
-	padding: 0;
-	list-style-type: upper-alpha;
+#directions-container li {
+    text-align: center;
+    list-style-type: upper-alpha;
+    font-weight: bolder;
+    font-size: 1.2em;
 }
+
 /* Google Maps Directions Panel */
 #panel {
   position: absolute;
   top: 10px;
   left: 25%;
-  z-index: 5;
-  background-color: #fff;
+  background-color: rgba(255,255,255,0.8) !important;
   padding: 5px;
   border: 1px solid #999;
   text-align: center;
@@ -199,11 +192,12 @@ html, body {
 
 #panel, .panel {
   font-family: 'Roboto','sans-serif';
+  background-color: rgba(255,255,255,0.3) !important;
   line-height: 30px;
 }
 
 #panel select, #panel input, .panel select, .panel input {
-  font-size: 15px;
+  font-size: 1.2em;
 }
 
 #panel select, .panel select {
@@ -211,148 +205,18 @@ html, body {
 }
 
 #panel i, .panel i {
-  font-size: 12px;
+  font-size: 1.2em;
 }
 
 #directions-panel {
 	height: 100%;
 	float: right;
 	width: 100%;
-	overflow: auto;
 }
 /* END PANEL CSS */
-
-/* CrawlList SideBar CSS */
-/*!
- * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
- * Code licensed under the Apache License v2.0.
- * For details, see http://www.apache.org/licenses/LICENSE-2.0.
- */
-
-/* Toggle Styles */
-
-#wrapper {
-    padding-left: 0;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-
-#wrapper.toggled {
-    padding-left: 250px;
-}
-
-#sidebar-wrapper {
-    z-index: 1000;
-    position: absolute;
-    left: 250px;
-    width: 0;
-    height: 100%;
-    margin-left: -250px;
-    overflow-y: auto;
-    background: #999999;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-    width: 250px;
-}
-
-#page-content-wrapper {
-    width: 100vw;
-    position: absolute;
-}
-
-#wrapper.toggled #page-content-wrapper {
-    position: absolute;
-    margin-right: -250px;
-}
 
 /* overrides container-fluid padding*/
 #map-padding {
 	padding-left: 0px !important;
 	padding-right: 0px !important;
-}
-
-/* Sidebar Styles */
-.sidebar-nav {
-    position: absolute;
-    top: 0;
-    width: 250px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.sidebar-nav li {
-    text-indent: 20px;
-    line-height: 40px;
-}
-
-.sidebar-nav li a {
-    display: block;
-    text-decoration: none;
-    color: #999999;
-}
-
-.sidebar-nav li a:hover {
-    text-decoration: none;
-    color: #fff;
-    background: rgba(255,255,255,0.2);
-}
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-    text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 18px;
-    line-height: 60px;
-}
-
-.sidebar-nav > .sidebar-brand a {
-    color: #999999;
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
-    background: none;
-}
-
-@media(min-width:768px) {
-	#map {
-		position: relative;
-		height: 100vh;
-		width: 100vw;
-	}
-    #wrapper {
-        padding-left: 0;
-    }
-
-    #wrapper.toggled {
-        padding-left: 250px;
-    }
-
-    #sidebar-wrapper {
-        width: 0;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        width: 250px;
-    }
-
-    #page-content-wrapper {
-        position: relative;
-    }
-
-    #wrapper.toggled #page-content-wrapper {
-        position: absolute;
-        margin-right: -250px;
-    }
 }
