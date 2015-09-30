@@ -220,9 +220,3 @@ html, body {
 	padding-left: 0px !important;
 	padding-right: 0px !important;
 }
-
-@media only screen and (max-device-width: 480px) {
-    #directions-container #list{
-        display: hidden;
-    }
-}
