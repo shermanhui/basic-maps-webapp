@@ -38,8 +38,8 @@ To-Dos to Meet Project Expectations:
 - ~~List View: filters through searched locations and opens associated marker~~
 - ~~"Unique Functionality"~~
     - ~~Route making counts...right?~~
-- Incorporate Build Process
-    - Production quality minified code
+- ~~Incorporate Build Process~~
+    - ~~Production quality minified code~~
 - Data persists when app is opened and closed
     - Firebase/localStorage
 - ~~Populates dynamic model with info retrieved from API~~
