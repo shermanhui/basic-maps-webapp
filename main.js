@@ -155,7 +155,7 @@ function initMap() {
 				}
 			]
 		}
-		];
+	];
 
 	var styledMap = new google.maps.StyledMapType(styles,
     	{name: "Styled Map"});
@@ -220,7 +220,7 @@ function viewModel(){
 			var venueLoc = venue.location;
 			var venueRating = venue.rating;
 			var venueCategory = venue.categories[0].id;
-			var venueIcon = venue.categories[0].icon['prefix'] + 'bg_32' + venue.categories[0].icon['suffix'];
+			var venueIcon = venue.categories[0].icon.prefix + 'bg_32' + venue.categories[0].icon.suffix;
 			var obj = {
 				name: venueName,
 				lat: venueLoc.lat,

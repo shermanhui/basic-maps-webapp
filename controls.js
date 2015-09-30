@@ -1,6 +1,6 @@
 // Toggles Crawl List
 $("#menu-toggle").click(function(e) {
-	e.preventDefault();
+    e.preventDefault();
 	$("#directions-container").toggle();
 });
 
@@ -11,7 +11,7 @@ $("#locations-toggle").click(function(e){
 });
 // calls panelSnap.js and sets up snap functions
 var options = {
-	$menu: false,
+  $menu: false,
 	menuSelector: 'a',
 	panelSelector: '> section',
 	namespace: '.panelSnap',
