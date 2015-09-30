@@ -5,7 +5,8 @@ How to use:
 - Download from github.com/shui91/basic-maps-webapp or open shui91.github.io/basic-maps-webapp
 - Click on "Get Started"
 - List of bars/breweries in Vancouver, BC open up as default.
-- User may search for their own location
+- User may search for their own location to load FourSquare's recommended drinking holes
+- Locations are marked as Breweries (Barrels) and Pubs(Beer Glasses).
 - Users can add/remove specific venues to their crawl list
 - Users can clear the list
 - Users can click "Create Crawl" to generate a directions list to plan their pub crawl!
@@ -23,13 +24,17 @@ http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html?ut
 http://guidobouman.github.io/jquery-panelsnap/
 
 Issues:
+- Unfortunately, due to FourSquare's broad "Pub" Category ID '4bf58dd8d48988d116941735', there are sometimes other night life locations thrown in, reducing the effectiveness of the location icons
+	- Location Icons disappear on Route Creation, because Google Maps Directions uses its own markers
 - Currently users can NOT add/remove from InfoWindow, to be implemented in the future
 - InfoWindows don't close on list view search
+- If screen is too small, search bars will overlap with toggles
 
 
 To-Dos:
 - Menu
 - Close InfoWindows on List View Search
+- Users can add/remove locations directly from infowindow
 - Responsive Design for Mobile
     - Cohesive and enjoyable user experience
 - ~~Search Bar: filters both list view and markers~~
@@ -45,6 +50,6 @@ To-Dos:
 - Include third-party API beyond what's required
 - ~~Style marker differently and usefully~~
 - Search function is optimized and provides things like autocomplete
-- README file detailing steps on how to run the project
+- ~~README file detailing steps on how to run the project~~
 - Comments are concise and self documenting
 - Code ready for personal review

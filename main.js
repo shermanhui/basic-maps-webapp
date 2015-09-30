@@ -286,7 +286,7 @@ function viewModel(){
 	};
 
 	this.addToRoute = function(place){ // takes in a location object and adds it to crawlList so user can create a route
-		if (!($.inArray(place, self.crawlList()) > -1)){  // checks for duplicate locations
+		if (!($.inArray(place, self.crawlList()) > -1)){  // checks for duplicate locations, JShint throws an error here, but functionality will not be the same if I remove brackets
 			self.crawlList.push(place);
 		} else {
 			alert('This location has already been added to the list!');
@@ -354,7 +354,7 @@ function viewModel(){
 	this.emptyRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
 		self.crawlList.removeAll();
 		self.makeMarkers();
-		if (directionsDisplay != null){
+		if (directionsDisplay != null){ //JShint throws an error here, but code will break if I use "!=="
 			window.directionsDisplay.setMap(null);
 			window.directionsDisplay.setPanel(null);
 			self.isLocked(false);
