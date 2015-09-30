@@ -73,22 +73,6 @@ html, body {
 }
 /* End Button CSS */
 
-/* NavBar CSS */
-.navbar a {
-	color:white;
-}
-
-.navbar-brand:hover {
-	font-weight: bold;
-	color: white;
-}
-
-.navbar-toggle .icon-bar {
-	font-size: 1.5em;
-	color:white;
-	background: white;
-}
-/* End NavBar CSS */
 #instructions p{
     font-size: 1.2em;
 }

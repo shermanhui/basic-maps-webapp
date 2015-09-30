@@ -1,9 +1,3 @@
-// TO DO:
-// Menu Option?
-// Close InfoWindow on search - not working
-// font in list view is hard to see on mobile device
-// Crawl List and List View Hidden On Default in mobile devices
-
 var map, marker, bounds, directionsService, directionsDisplay;
 var infoWindow = new google.maps.InfoWindow();
 
