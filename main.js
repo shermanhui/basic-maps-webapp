@@ -201,7 +201,6 @@ function viewModel(){
 				'&client_secret=' + CLIENT_SECRET +
 				'&v=20150806&m=foursquare',
 			success: function(fsData){
-				console.log(fsData);
 				var response = fsData.response.groups[0].items;
 				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
 				self.emptyRoute(directionsDisplay); // empties out any previously created route in crawl List
@@ -210,7 +209,7 @@ function viewModel(){
 				map.setZoom(13);
 			},
 			error: function(error){
-				alert('There was a problem retrieving the requested data, please double check your query');
+				alert('There was a problem retrieving the requested data, please double check your location');
 			}
 		});
 	};
@@ -240,7 +239,6 @@ function viewModel(){
 			self.locationsList.push(new Location(obj));
 		}
 		self.makeMarkers();
-		console.log(self.locationsList()[1].category(), self.locationsList()[1].name());
 	};
 
 	this.clearData = function(){ //clears map data on new location search
@@ -297,7 +295,7 @@ function viewModel(){
 		if (!($.inArray(place, self.crawlList()) > -1)){  // checks for duplicate locations
 			self.crawlList.push(place);
 		} else {
-			alert('duplicate');
+			alert('This location has already been added to the list!');
 		}
 	};
 
@@ -305,7 +303,7 @@ function viewModel(){
 		if ($.inArray(place, self.crawlList()) > -1){  // checks for duplicate locations
 			self.crawlList.remove(place);
 		} else {
-			alert('Nothing to Remove');
+			alert('This location has not been added to the list yet!');
 		}
 	};
 
@@ -334,9 +332,8 @@ function viewModel(){
 			if (status === google.maps.DirectionsStatus.OK){
 				window.directionsDisplay.setDirections(response);
 				var route = response.routes[0];
-				console.log(response);
 			} else {
-				alert('Directions request failed due to ' + status);
+				alert('Directions request failed due to ' + status + ', please try again!');
 			}
 		});
 
@@ -352,7 +349,7 @@ function viewModel(){
 			});
 			self.isLocked(true);
 		} else {
-			alert('You need atleast two locations and are limited to 8');
+			alert('You need atleast 2 locations to create a route and are limited to 8 locations');
 		}
 	};
 
