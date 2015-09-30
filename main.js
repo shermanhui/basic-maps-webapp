@@ -356,6 +356,10 @@ function viewModel(){
 		}
 	};
 
+	this.clearCrawlList = function(){
+		self.crawlList.removeAll();
+	};
+
 	this.emptyRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
 		self.crawlList.removeAll();
 		self.makeMarkers();

@@ -46,8 +46,13 @@
 			<div class='row'>
 				<div class='col-md-offset-3 col-md-6 text-center poiret-font'>
 					<h2>Plan Your <b>Night Out</b></h2>
+					<span id='instructions'>
 					<p>Inspired by "The World's End" film written by Wright and Simon Pegg, this app is designed to help you plan your own "Golden Mile" in your hometown or desired location.</p>
-					<p> Simply enter your city to search for the most popular bars, pubs and breweries nearest your location according to FourSquare. Filter through your favourite locations and add them to your list (up to 8 locations) to create your crawl for the night!</p>
+					<br>
+					<h2><b>Instructions</b></h2>
+					<p> Simply enter your city to search for the most popular bars, pubs and breweries in your location according to FourSquare. </p>
+					<p>	Filter through your favourite locations and add them to your list (up to 8 locations) to create your crawl for the night!</p>
+					</span>
 					<input class='form-control text-center' id="global-search-about" placeholder="City, State" data-bind="value: locInput" autocomplete="off">
 				</div>
 			</div>
@@ -82,12 +87,13 @@
 			</div>
 			<div class='poiret-font gray' id='directions-container'>
 				<h2>Your Crawl Route</h2>
-				<div data-bind="if: crawlList().length == 0">There aren't any locations yet..Add some to begin!</div>
+				<div data-bind="if: crawlList().length == 0">There aren't any locations added yet. Add some to begin!</div>
 				<ol data-bind='foreach: crawlList'>
 					<li data-bind='text: $data.name()'></li>
 				</ol>
-				<button class='btn primary outline' data-bind='click: makeRoute, disable: isLocked'>Create Route!</button>
-				<button class='btn primary outline' data-bind='click: emptyRoute, enable: isLocked'>Reset</button>
+				<button class='btn outline' data-bind='click: makeRoute, disable: isLocked'>Create Route</button>
+				<button class='btn outline' data-bind='click: clearCrawlList, enable: viewModel.crawlList().length > 0'>Clear List</button>
+				<button class='btn outline' data-bind='click: emptyRoute, enable: isLocked'>Reset Data</button>
 				<div id="directions-panel" class="panel"></div>
 			</div>
 		</div>
