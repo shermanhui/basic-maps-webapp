@@ -6,7 +6,12 @@ var CLIENT_SECRET = 'NPWADVEQHB54FWUKETIZQJB5M2CRTPGRTSRICLZEQDYMI2JI';
 var BAR_ID = '4bf58dd8d48988d116941735';
 var BREWERY_ID = '50327c8591d4c4b30a586d5d';
 
-//make a Location, data to be used for markers and list view
+/*
+* Represents a Location
+* @constructor
+* @param {JSON} data
+*/
+
 var Location = function(data){
 	var self = this;
 	this.name = ko.observable(data.name);
@@ -32,7 +37,9 @@ var Location = function(data){
 		'</div>';
 };
 
-// function to initialize Google map
+/*
+* @function initializes GoogleMaps and its styles
+*/
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -40,6 +47,7 @@ function initMap() {
 		disableDefaultUI: true
 	});
 
+	// styles google maps api
 	var styles =[
 		{
 			"elementType": "labels",
@@ -175,15 +183,24 @@ function initMap() {
 	map.setMapTypeId('map_style');
 }
 
+/*
+* viewModel for FourSquare API, and Maps data
+* @class viewModel
+*
+*/
 function viewModel(){
 	var self = this;
 	this.locationsList = ko.observableArray(); // list to keep track of Locations
 	this.markers = ko.observableArray(); // list of markers
 	this.crawlList = ko.observableArray(); // list of user selected venues
 	this.filter = ko.observable(''); 	// the filter for search bar
-	this.isLocked= ko.observable(false);
+	this.isLocked= ko.observable(false); // toggles clear list & reset list button accessibility
 	this.locInput = ko.observable('Vancouver, BC');  // user defined location input
 
+	/*
+	* @description retrieves relevant Locations from FourSquare API according to user defined location
+	* @param {KO Observable} location a user defined KO Observable
+	*/
 	this.loadLocations = function(location){ // takes a user defined location; Vancouver, BC to start with
 		$.ajax({
 			url: 'https://api.foursquare.com/v2/venues/explore?',
@@ -197,7 +214,7 @@ function viewModel(){
 			success: function(fsData){
 				var response = fsData.response.groups[0].items;
 				self.clearData(); // makes sure crawl List and directions display is emptied out on new location search
-				self.emptyRoute(directionsDisplay); // empties out any previously created route in crawl List
+				self.clearRoute(directionsDisplay); // empties out any previously created route in crawl List
 				self.createLocations(response); // creates new list of locations to populate map
 				map.setCenter({lat: self.locationsList()[5].lat(), lng: self.locationsList()[15].lng()}); // hacky way of getting map to re-center on new search
 				map.setZoom(13);
@@ -208,11 +225,19 @@ function viewModel(){
 		});
 	};
 
+	/*
+	* @description listens for new user defined location value to update google maps
+	*/
+
 	this.searchLocations = ko.computed(function(){ //loads user defined location; default is Vancouver
 		var location = self.locInput().toLowerCase();
 		self.loadLocations(location);
 	});
 
+	/*
+	* @description takes data from FourSquare API call, makes Location Objects and pushes them into a KO Observable Array, also make map markers
+	* @param {JSON} response FourSquare API data information used to create Location Objects
+	*/
 	this.createLocations = function(response){
 		for (var i = 0; i < response.length; i++) {
 			var venue = response[i].venue;
@@ -235,12 +260,20 @@ function viewModel(){
 		self.makeMarkers();
 	};
 
+	/*
+	* @description clears map of all markers and removes all previous Locations
+	*/
+
 	this.clearData = function(){ //clears map data on new location search
 		self.markers().forEach(function(marker){
 			marker.setMap(null);
 		});
 		self.locationsList.removeAll();
 	};
+
+	/*
+	* @description makes a marker for each Location produced by the ajax call, extends the map to fit all markers and opens infowindows on marker click
+	*/
 
 	this.makeMarkers = function(){
 		// for each Location plant a marker at the given lat,lng and on click show the info window
@@ -269,6 +302,11 @@ function viewModel(){
 		});
 	};
 
+	/*
+	* @description allows user to open Info Windows from the List View using a Location's name; will pan to location and open respective info window
+	* @param {object} place - Location Object
+	*/
+
 	this.openFromList = function(place){ // takes in the relevant Location Object
 		var listItem = place.name(); // pulls the Location name from clicked list item
 		var len = self.markers().length;
@@ -285,6 +323,11 @@ function viewModel(){
 		}
 	};
 
+	/*
+	* @description adds user selected location to crawl list to make and draw directions on map, prevents adding the same location twice
+	* @param {object} place - Location Object Name is used as id, and then if it matches the Location on file, it is added to self.crawlList
+	*/
+
 	this.addToRoute = function(place){ // takes in a location object and adds it to crawlList so user can create a route
 		if (!($.inArray(place, self.crawlList()) > -1)){  // checks for duplicate locations, JShint throws an error here, but functionality will not be the same if I remove brackets
 			self.crawlList.push(place);
@@ -292,6 +335,11 @@ function viewModel(){
 			alert('This location has already been added to the list!');
 		}
 	};
+
+	/*
+	* @description removes selected Location from crawlList, if applicable
+	* @param {object} place - Location Object
+	*/
 
 	this.removeFromRoute = function(place){ // removes location from list
 		if ($.inArray(place, self.crawlList()) > -1){  // checks for duplicate locations
@@ -301,9 +349,15 @@ function viewModel(){
 		}
 	};
 
+	/*
+	* @description takes user defined locations and creates a route, pins route and directions onto window
+	* @param {object} Google Directions API
+	* @param {object} Google Directions API
+	*/
+
 	this.calculateAndDisplayRoute = function(directionsService, directionsDisplay){
 		window.directionsService = new google.maps.DirectionsService();
-		window.directionsDisplay = new google.maps.DirectionsRenderer({polylineOptions: { strokeColor: '#5cb85c' }});
+		window.directionsDisplay = new google.maps.DirectionsRenderer({polylineOptions: { strokeColor: '#5cb85c' }}); // green color for Directions line
 
 		var waypoints = [];
 		for (var i = 0; i < self.crawlList().length; i++){
@@ -320,7 +374,6 @@ function viewModel(){
 			destination: waypoints[waypoints.length - 1].location, // set last waypoint as destination, causing duplicate location on directions panel
 			waypoints: waypoints.slice(1, waypoints.length -1),
 			optimizeWaypoints: false,
-			//provideRouteAlternatives: true,
 			travelMode: google.maps.TravelMode.WALKING
 		}, function(response, status){
 			if (status === google.maps.DirectionsStatus.OK){
@@ -335,7 +388,11 @@ function viewModel(){
 		window.directionsDisplay.setPanel(document.getElementById('directions-panel'));
 	};
 
-	this.makeRoute = function(directionsService, directionsDisplay){
+	/*
+	* @description allows User to create a route and draws it on the map, calls self.calculateAndDisplayRoute
+	*/
+
+	this.makeRoute = function(){
 		if (self.crawlList().length > 1 && self.crawlList().length < 8){
 			self.calculateAndDisplayRoute(directionsService, directionsDisplay);
 			self.markers().forEach(function(marker){
@@ -347,11 +404,20 @@ function viewModel(){
 		}
 	};
 
-	this.clearCrawlList = function(){
+	/*
+	* @description removes all items in crawlList on button click
+	*/
+
+	this.emptyCrawlList = function(){
 		self.crawlList.removeAll();
 	};
 
-	this.emptyRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
+	/*
+	* @description clears map markers, user added locations and resets location markers and relocks the button
+	* @param {object} directionsDisplay - directions that are displayed on screen
+	*/
+
+	this.clearRoute = function(directionsDisplay){ //remakes markers, removes last crawlList
 		self.crawlList.removeAll();
 		self.makeMarkers();
 		if (directionsDisplay != null){ //JShint throws an error here, but code will break if I use "!=="
@@ -361,19 +427,27 @@ function viewModel(){
 		}
 	};
 
-	this.setMarker = function(){ // for each marker in the list set it to be visible
+	/*
+	* @description sets each marker in self.markers() to be visible
+	*/
+
+	this.setMarker = function(){
 		for (var i = 0; i < self.markers().length; i++){
 			self.markers()[i].setVisible(true);
 		}
 	};
 
-	// filters out list and markers
+	/*
+	* @description filters list and marker according to user input
+	* @returns self.locationsList or all places that match the user defined location
+	*/
+
 	this.searchFilter = ko.computed(function(){
 		var filter = self.filter().toLowerCase();
-		if (!filter){ // if false return the list as normal
-			self.setMarker();
-			infoWindow.close();
-			return self.locationsList();
+		if (!filter){
+			self.setMarker(); // sets all markers to be visible
+			infoWindow.close(); // closes all infowindows on search
+			return self.locationsList(); // returns all locations in self.locationsList
 		} else {
 			return ko.utils.arrayFilter(self.locationsList(), function(place){
 				for (var i = 0; i < self.markers().length; i++){ // for every marker if the title of the marker matches the filter set markers to visible

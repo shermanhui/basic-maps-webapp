@@ -31,16 +31,13 @@ Issues:
 - If screen is too small, search bars will overlap with toggles
 
 
-To-Dos:
-- Menu
-- Close InfoWindows on List View Search
-- Users can add/remove locations directly from infowindow
-- Responsive Design for Mobile
-    - Cohesive and enjoyable user experience
+To-Dos to Meet Project Expectations:
+- ~~Responsive Design for Mobile~~
+    - ~~Cohesive and enjoyable user experience~~
 - ~~Search Bar: filters both list view and markers~~
 - ~~List View: filters through searched locations and opens associated marker~~
 - ~~"Unique Functionality"~~
-    - Route making counts...right?
+    - ~~Route making counts...right?~~
 - Incorporate Build Process
     - Production quality minified code
 - Data persists when app is opened and closed
@@ -51,5 +48,10 @@ To-Dos:
 - ~~Style marker differently and usefully~~
 - Search function is optimized and provides things like autocomplete
 - ~~README file detailing steps on how to run the project~~
-- Comments are concise and self documenting
-- Code ready for personal review
+- ~~Comments are concise and self documenting~~
+- ~~Code ready for personal review~~
+
+To-Dos for the Future:
+- Menu
+- Close InfoWindows on List View Search
+- Users can add/remove locations directly from infowindow

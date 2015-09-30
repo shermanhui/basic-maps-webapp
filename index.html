@@ -73,8 +73,8 @@
 					<li data-bind='text: $data.name()'></li>
 				</ol>
 				<button class='btn outline' data-bind='click: makeRoute, disable: isLocked'>Create Route</button>
-				<button class='btn outline' data-bind='click: clearCrawlList, enable: viewModel.crawlList().length > 0'>Clear List</button>
-				<button class='btn outline' data-bind='click: emptyRoute, enable: isLocked'>Reset Data</button>
+				<button class='btn outline' data-bind='click: emptyCrawlList, enable: viewModel.crawlList().length > 0'>Clear List</button>
+				<button class='btn outline' data-bind='click: clearRoute, enable: isLocked'>Reset Data</button>
 				<div id="directions-panel" class="panel"></div>
 			</div>
 		</div>
