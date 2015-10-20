@@ -22,6 +22,7 @@ http://stackoverflow.com/questions/237104/array-containsobj-in-javascript
 http://stackoverflow.com/questions/10306883/prevent-a-double-click-on-a-button-with-knockout-js
 http://gmaps-samples-v3.googlecode.com/svn/trunk/styledmaps/wizard/index.html?utm_medium=twitter
 http://guidobouman.github.io/jquery-panelsnap/
+https://github.com/t4t5/sweetalert
 
 Issues:
 - Unfortunately, due to FourSquare's broad "Pub" Category ID '4bf58dd8d48988d116941735', there are sometimes other night life locations thrown in, reducing the effectiveness of the location icons
